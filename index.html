@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直播复盘仪表盘</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #FFC000;
+            --success: #2ECC71;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --dark: #1A1A2E;
+            --gray-100: #F8F9FA;
+            --gray-200: #E9ECEF;
+            --gray-300: #DEE2E6;
+            --gray-400: #CED4DA;
+            --gray-500: #ADB5BD;
+            --gray-600: #6C757D;
+            --gray-700: #495057;
+            --gray-800: #343A40;
+            --white: #FFFFFF;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-xl: 0 16px 48px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--gray-800);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--gray-600);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Module Cards */
+        .module {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .module-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .module-title-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* KPI Cards */
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: transparent;
+        }
+
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 40px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .kpi-unit {
+            font-size: 16px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .kpi-trend {
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .kpi-trend.up {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+            color: white;
+        }
+
+        /* Chart Toggle */
+        .chart-toggle {
+            display: flex;
+            gap: 8px;
+            background: var(--gray-100);
+            padding: 4px;
+            border-radius: var(--radius-xl);
+        }
+
+        .toggle-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            color: var(--gray-700);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 320px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        /* Session Tabs */
+        .session-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 8px 4px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .session-tabs::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .session-tabs::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 4px;
+        }
+
+        .session-tabs::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+
+        .session-tab {
+            flex-shrink: 0;
+            padding: 16px 28px;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .session-tab::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .session-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .session-tab:hover::after {
+            opacity: 0.3;
+        }
+
+        .session-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .session-tab.active .session-date,
+        .session-tab.active .session-title {
+            color: white;
+        }
+
+        .session-date {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+
+        .session-title {
+            font-size: 13px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .highlight-badge {
+            position: absolute;
+            top: -8px;
+            right: -6px;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+
+        /* Detail Container */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 28px;
+        }
+
+        @media (max-width: 1024px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Quantitative Section */
+        .quantitative-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quantitative-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 10s ease-in-out infinite;
+        }
+
+        .quantitative-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title-white {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .funnel-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .funnel-item {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .funnel-item:hover {
+            transform: translateX(6px);
+            background: white;
+        }
+
+        .funnel-label {
+            font-size: 14px;
+            color: var(--gray-700);
+            font-weight: 600;
+        }
+
+        .funnel-value {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Qualitative Section */
+        .qualitative-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-block {
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .review-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 5px;
+        }
+
+        .review-block.highlights::before {
+            background: linear-gradient(180deg, #2ECC71 0%, #27AE60 100%);
+        }
+
+        .review-block.issues::before {
+            background: linear-gradient(180deg, #F39C12 0%, #E67E22 100%);
+        }
+
+        .review-block.actions::before {
+            background: linear-gradient(180deg, #3498DB 0%, #2980B9 100%);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .review-icon-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .review-block.highlights .review-icon-circle {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
+        }
+
+        .review-block.issues .review-icon-circle {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(230, 126, 34, 0.15) 100%);
+        }
+
+        .review-block.actions .review-icon-circle {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+        }
+
+        .review-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .review-list {
+            list-style: none;
+        }
+
+        .review-list li {
+            padding: 12px 0;
+            padding-left: 28px;
+            position: relative;
+            color: var(--gray-700);
+            line-height: 1.7;
+            font-size: 15px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .review-list li:last-child {
+            border-bottom: none;
+        }
+
+        .review-list li::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 20px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .empty-state {
+            color: var(--gray-500);
+            font-style: italic;
+            padding: 24px;
+            text-align: center;
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        /* Session Header Info */
+        .session-info-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .session-core {
+            color: var(--gray-600);
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-card">
+                <h1>🎥 直播复盘仪表盘</h1>
+                <p class="subtitle">数据驱动 · 持续优化</p>
+            </div>
+        </header>
+
+        <!-- Module A: Trend Overview -->
+        <section class="module">
+            <div class="module-header">
+                <h2 class="module-title">
+                    <span class="module-title-icon">📊</span>
+                    战役总览
+                </h2>
+                <div class="chart-toggle">
+                    <button class="toggle-btn active" data-metric="deals">成交单数</button>
+                    <button class="toggle-btn" data-metric="viewers">场观人数</button>
+                    <button class="toggle-btn" data-metric="conversion">转化率</button>
+                </div>
+            </div>
+
+            <div class="kpi-cards">
+                <div class="kpi-card">
+                    <div class="kpi-label">累计总成交</div>
+                    <div class="kpi-value"><span id="totalDeals">0</span><span class="kpi-unit">单</span></div>
+                    <div class="kpi-trend up">📈 增长中
+                    持续增长</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">平均转化率</div>
+                    <div class="kpi-value"><span id="avgConversion">0</span><span class="kpi-unit">%</span></div>
+                    <div class="kpi-trend up">✨ 表现优秀</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">总场观人次</div>
+                    <div class="kpi-value"><span id="totalViewers">0</span><span class="kpi-unit">人</span></div>
+                    <div class="kpi-trend up">🔥 流量破局</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Module B: Session Selector -->
+        <section class="module">
+            <div class="module-header">
+                <h2 class="module-title">
+                    <span class="module-title-icon">📅</span>
+                    选择场次
+                </h2>
+            </div>
+            <div class="session-tabs" id="sessionTabs">
+            </div>
+        </section>
+
+        <!-- Module C: Detail Container -->
+        <section class="module" id="detailContainer">
+        </section>
+    </div>
+
+    <script>
+        const liveSessions = [
+            {
+                "id": "20260131",
+                "date": "1月31日",
+                "title": "春节攻势·启动战",
+                "isHighlight": false,
+                "coreTheme": "模式验证期的“逻辑跑通”，确立了“PPT闭环”与“实物锚点”的打法基础",
+                "chartMetrics": {
+                    "deals": 6,
+                    "viewers": 120,
+                    "conversion": 15.8
+                },
+                "detailData": {
+                    "time": "15:00/19:30 (双场轮播)",
+                    "realUV": "120人",
+                    "interaction": "38人",
+                    "conversion": "15.8%",
+                    "revenue": "6单"
+                },
+                "reviewText": {
+                    "highlights": [
+                        "五页PPT闭环：摒弃传统叫卖，首创“学科规划+福利对赌”逻辑",
+                        "实物价值锚定：重新设计福袋结构，重点突出“香蕉笔袋+纸质讲义”的实物价值",
+                        "15分钟高频循环：建立“5分钟干货+5分钟产品+5分钟逼单”的节奏"
+                    ],
+                    "issues": [
+                        "宣发启动过晚：仅提前不到24小时预热，导致流量开口过小",
+                        "主播专业度待磨合：团队首秀，在逼单节奏和情绪调动上仍有卡顿"
+                    ],
+                    "actions": [
+                        "SOP极简优化：缩短学科宣讲比例，强化“纯福利场”心智",
+                        "CC提前介入：确立新流程——家长抢到福袋后，CC立即以“核销”名义介入关单"
+                    ]
+                }
+            },
+            {
+                "id": "20260205",
+                "date": "2月5日",
+                "title": "口碑发酵·升温战",
+                "isHighlight": true,
+                "coreTheme": "战术成型期的“效率之战”，验证了“CC配合逼单”的高效性，转化率达巅峰",
+                "chartMetrics": {
+                    "deals": 10,
+                    "viewers": 46,
+                    "conversion": 30.3
+                },
+                "detailData": {
+                    "time": "15:00-16:00 (1h)",
+                    "realUV": "46人",
+                    "interaction": "33人 (71.7%)",
+                    "conversion": "30.3%",
+                    "revenue": "10单"
+                },
+                "reviewText": {
+                    "highlights": [
+                        "“CC唱戏”模式跑通：直播间负责营造“仅限今天”的紧迫感，CC在私域迅速跟进",
+                        "实物堆砌感：新增《自然拼读宝典礼盒》，实物的份量感弥补了线上课的虚拟感",
+                        "极致留存：利用“左上角引导PPT”，成功将71.7%的“看客”转化为“销售线索”"
+                    ],
+                    "issues": [
+                        "池子太小：除去内部人员，真实用户仅46人",
+                        "流失跟进：仍有23位领福袋的高意向用户未成交"
+                    ],
+                    "actions": [
+                        "全力搞流量：既然转化模型（CC关单）已跑通，核心任务转为“扩容”",
+                        "裂变启动：利用老学员转发“领Max福袋”海报，通过“老带新”策略突破百人场观"
+                    ]
+                }
+            },
+            {
+                "id": "20260208",
+                "date": "2月8日",
+                "title": "节前冲刺战",
+                "isHighlight": false,
+                "coreTheme": "流量蓄水期的“压力测试”，高转化但低流量，暴露了引流短板",
+                "chartMetrics": {
+                    "deals": 8,
+                    "viewers": 29,
+                    "conversion": 29.6
+                },
+                "detailData": {
+                    "time": "19:00-21:00 (2h)",
+                    "realUV": "29人",
+                    "interaction": "27人 (93%)",
+                    "conversion": "29.6%",
+                    "revenue": "8单"
+                },
+                "reviewText": {
+                    "highlights": [
+                        "互动率93%：几乎每一个进来的真实家长都参与了福袋互动",
+                        "转化率29.6%：在没有大规模“逼单”氛围下，依然保持了近30%的转化"
+                    ],
+                    "issues": [
+                        "流量获取遭遇瓶颈：时长与流量不成正比",
+                        "预热动作不足，导致私域池塘里的鱼没有被激活"
+                    ],
+                    "actions": [
+                        "立刻启动饱和式宣发：必须在下一场前，通过高频次的海报轰炸，强制唤醒沉睡客户"
+                    ]
+                }
+            },
+            {
+                "id": "20260212",
+                "date": "2月12日",
+                "title": "年前收官战",
+                "isHighlight": true,
+                "coreTheme": "策略验证成功的“收割之战”，全链路闭环配合，实现量价齐升",
+                "chartMetrics": {
+                    "deals": 20,
+                    "viewers": 68,
+                    "conversion": 35
+                },
+                "detailData": {
+                    "time": "18:30-22:00 (3.5h)",
+                    "realUV": "68人",
+                    "interaction": "57人 (83.8%)",
+                    "conversion": "35%",
+                    "revenue": "20单"
+                },
+                "reviewText": {
+                    "highlights": [
+                        "流量破局成功：客户数从29人激增至68人，证明“海报轰炸”策略有效激活了私域僵尸粉",
+                        "高压下的高转化：在流量翻倍的情况下，转化率不降反升（达到35%）",
+                        "长直播模型验证：3.5小时的时长支撑了更完整的“讲品-互动-逼单”循环"
+                    ],
+                    "issues": [
+                        "开场前15分钟节奏略拖沓",
+                        "部分环节的过渡可以更紧凑"
+                    ],
+                    "actions": [
+                        "固化'逼单通栏'的设计模板",
+                        "剪辑高光时刻做短视频分发",
+                        "优化开场流程，加快进入主题"
+                    ]
+                }
+            }
+        ];
+
+        let currentMetric = 'deals';
+        let selectedSessionIndex = liveSessions.length - 1;
+        let trendChart = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateKPIs();
+            renderSessionTabs();
+            renderDetailContainer(liveSessions[selectedSessionIndex]);
+            initChart();
+        });
+
+        function calculateKPIs() {
+            const totalDeals = liveSessions.reduce((sum, s) => sum + s.chartMetrics.deals, 0);
+            const totalViewers = liveSessions.reduce((sum, s) => sum + s.chartMetrics.viewers, 0);
+            const avgConversion = (liveSessions.reduce((sum, s) => sum + s.chartMetrics.conversion, 0) / liveSessions.length).toFixed(1);
+
+            document.getElementById('totalDeals').textContent = totalDeals;
+            document.getElementById('totalViewers').textContent = totalViewers;
+            document.getElementById('avgConversion').textContent = avgConversion;
+        }
+
+        function renderSessionTabs() {
+            const container = document.getElementById('sessionTabs');
+            container.innerHTML = '';
+
+            liveSessions.forEach((session, index) => {
+                const tab = document.createElement('div');
+                tab.className = `session-tab ${index === selectedSessionIndex ? 'active' : ''}`;
+                tab.onclick = () => selectSession(index);
+
+                tab.innerHTML = `
+                    <div class="session-date">${session.date}</div>
+                    <div class="session-title">${session.title}</div>
+                    ${session.isHighlight ? '<span class="highlight-badge">🔥</span>' : ''}
+                `;
+
+                container.appendChild(tab);
+            });
+        }
+
+        function selectSession(index) {
+            selectedSessionIndex = index;
+            renderSessionTabs();
+            renderDetailContainer(liveSessions[index]);
+        }
+
+        function renderDetailContainer(session) {
+            const container = document.getElementById('detailContainer');
+            container.className = 'module fade-in';
+
+            container.innerHTML = `
+                <div class="session-info-header">${session.date} · ${session.title}</div>
+                <p class="session-core">${session.coreTheme}</p>
+                <div class="detail-grid">
+                    <div class="quantitative-section">
+                        <div class="quantitative-content">
+                            <h3 class="section-title-white">
+                                <span style="font-size:22px;">📈</span>
+                                数据漏斗
+                            </h3>
+                            <div class="funnel-grid">
+                                <div class="funnel-item">
+                                    <span class="funnel-label">直播时间</span>
+                                    <span class="funnel-value">${session.detailData.time}</span>
+                                </div>
+                                <div class="funnel-item">
+                                    <span class="funnel-label">真实场观(UV)</span>
+                                    <span class="funnel-value">${session.detailData.realUV}</span>
+                                </div>
+                                <div class="funnel-item">
+                                    <span class="funnel-label">互动/福袋人数</span>
+                                    <span class="funnel-value">${session.detailData.interaction}</span>
+                                </div>
+                                <div class="funnel-item">
+                                    <span class="funnel-label">成交单数</span>
+                                    <span class="funnel-value">${session.detailData.revenue}</span>
+                                </div>
+                                <div class="funnel-item">
+                                    <span class="funnel-label">转化率</span>
+                                    <span class="funnel-value">${session.detailData.conversion}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="qualitative-section">
+                        <div class="review-block highlights">
+                            <div class="review-header">
+                                <span class="review-icon-circle">✅</span>
+                                <span class="review-title">亮点/成功策略</span>
+                            </div>
+                            ${renderReviewList(session.reviewText.highlights)}
+                        </div>
+
+                        <div class="review-block issues">
+                            <div class="review-header">
+                                <span class="review-icon-circle">⚠️</span>
+                                <span class="review-title">不足/问题点</span>
+                            </div>
+                            ${renderReviewList(session.reviewText.issues)}
+                        </div>
+
+                        <div class="review-block actions">
+                            <div class="review-header">
+                                <span class="review-icon-circle">💡</span>
+                                <span class="review-title">迭代/下一步计划</span>
+                            </div>
+                            ${renderReviewList(session.reviewText.actions)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderReviewList(items) {
+            if (!items || items.length === 0) {
+                return '<div class="empty-state">待复盘</div>';
+            }
+
+            return `
+                <ul class="review-list">
+                    ${items.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+            gradient.addColorStop(0, 'rgba(102, 126, 234, 0.4)');
+            gradient.addColorStop(1, 'rgba(118, 75, 162, 0.05)');
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: liveSessions.map(s => s.date),
+                    datasets: [{
+                        label: '成交单数',
+                        data: liveSessions.map(s => s.chartMetrics.deals),
+                        borderColor: '#667eea',
+                        backgroundColor: gradient,
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 8,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 3,
+                        pointHoverRadius: 10,
+                        pointShadowColor: '#764ba2'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(26, 26, 46, 0.95)',
+                            padding: 16,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            cornerRadius: 12,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(102, 126, 234, 0.08)'
+                            },
+                            ticks: {
+                                font: { size: 13, weight: '500' },
+                                color: '#6C757D'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: { size: 13, weight: '600' },
+                                color: '#495057'
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentMetric = this.dataset.metric;
+                    updateChart();
+                });
+            });
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+            gradient.addColorStop(0, 'rgba(102, 126, 234, 0.4)');
+            gradient.addColorStop(1, 'rgba(118, 75, 162, 0.05)');
+
+            let label, data;
+            switch(currentMetric) {
+                case 'deals':
+                    label = '成交单数';
+                    data = liveSessions.map(s => s.chartMetrics.deals);
+                    break;
+                case 'viewers':
+                    label = '场观人数';
+                    data = liveSessions.map(s => s.chartMetrics.viewers);
+                    break;
+                case 'conversion':
+                    label = '转化率 (%)';
+                    data = liveSessions.map(s => s.chartMetrics.conversion);
+                    break;
+            }
+
+            trendChart.data.datasets[0].label = label;
+            trendChart.data.datasets[0].data = data;
+            trendChart.update();
+        }
+    </script>
+</body>
+</html>
