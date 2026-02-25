@@ -12,6 +12,116 @@
             box-sizing: border-box;
         }
 
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .login-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 48px 40px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .login-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #6C757D;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .login-input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid #E9ECEF;
+            border-radius: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        .login-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-error {
+            color: #E74C3C;
+            font-size: 14px;
+            margin-top: 12px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-error.show {
+            opacity: 1;
+        }
+
         :root {
             --primary: #FF6B35;
             --secondary: #004E89;
@@ -585,9 +695,54 @@
             font-style: italic;
             margin-bottom: 20px;
         }
+
+        /* Month Selector */
+        .month-selector {
+            display: flex;
+            gap: 8px;
+            background: var(--gray-100);
+            padding: 4px;
+            border-radius: var(--radius-xl);
+        }
+
+        .month-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.3s ease;
+        }
+
+        .month-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .month-btn:hover:not(.active) {
+            color: var(--gray-700);
+        }
     </style>
 </head>
 <body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon">🎥</div>
+            <h1 class="login-title">直播复盘仪表盘</h1>
+            <p class="login-subtitle">请输入密码以访问数据</p>
+            <div class="login-input-group">
+                <input type="password" class="login-input" id="passwordInput" placeholder="请输入密码" onkeypress="handleKeyPress(event)">
+            </div>
+            <button class="login-button" onclick="handleLogin()">登录</button>
+            <div class="login-error" id="loginError">密码错误，请重试</div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <div class="header-card">
@@ -603,10 +758,14 @@
                     <span class="module-title-icon">📊</span>
                     战役总览
                 </h2>
-                <div class="chart-toggle">
-                    <button class="toggle-btn active" data-metric="deals">成交单数</button>
-                    <button class="toggle-btn" data-metric="viewers">场观人数</button>
-                    <button class="toggle-btn" data-metric="conversion">转化率</button>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <div class="month-selector" id="monthSelector">
+                    </div>
+                    <div class="chart-toggle">
+                        <button class="toggle-btn active" data-metric="deals">成交单数</button>
+                        <button class="toggle-btn" data-metric="viewers">场观人数</button>
+                        <button class="toggle-btn" data-metric="conversion">转化率</button>
+                    </div>
                 </div>
             </div>
 
@@ -790,21 +949,114 @@
             }
         ];
 
+        const CORRECT_PASSWORD = '51talk2026';
         let currentMetric = 'deals';
         let selectedSessionIndex = liveSessions.length - 1;
         let trendChart = null;
+        let currentMonth = 'all'; // 'all' or month number
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Focus password input on load
+            document.getElementById('passwordInput').focus();
+            renderMonthSelector();
+        });
+
+        function initApp() {
             calculateKPIs();
             renderSessionTabs();
             renderDetailContainer(liveSessions[selectedSessionIndex]);
             initChart();
-        });
+        }
+
+        // Login Functions
+        function handleLogin() {
+            const password = document.getElementById('passwordInput').value;
+            const errorElement = document.getElementById('loginError');
+
+            if (password === CORRECT_PASSWORD) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                initApp();
+            } else {
+                errorElement.classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+                setTimeout(() => {
+                    errorElement.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                handleLogin();
+            }
+        }
+
+        // Get filtered sessions based on selected month
+        function getFilteredSessions() {
+            if (currentMonth === 'all') {
+                return liveSessions;
+            }
+            return liveSessions.filter(session => {
+                const monthMatch = session.date.match(/(\d+)月/);
+                return monthMatch && parseInt(monthMatch[1]) === currentMonth;
+            });
+        }
+
+        // Get available months from data
+        function getAvailableMonths() {
+            const months = new Set();
+            liveSessions.forEach(session => {
+                const monthMatch = session.date.match(/(\d+)月/);
+                if (monthMatch) {
+                    months.add(parseInt(monthMatch[1]));
+                }
+            });
+            return Array.from(months).sort((a, b) => a - b);
+        }
+
+        function renderMonthSelector() {
+            const container = document.getElementById('monthSelector');
+            container.innerHTML = '';
+
+            // Add "All" option
+            const allBtn = document.createElement('button');
+            allBtn.className = `month-btn ${currentMonth === 'all' ? 'active' : ''}`;
+            allBtn.textContent = '全部';
+            allBtn.onclick = () => selectMonth('all');
+            container.appendChild(allBtn);
+
+            // Add month options
+            getAvailableMonths().forEach(month => {
+                const btn = document.createElement('button');
+                btn.className = `month-btn ${currentMonth === month ? 'active' : ''}`;
+                btn.textContent = `${month}月`;
+                btn.onclick = () => selectMonth(month);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectMonth(month) {
+            currentMonth = month;
+            renderMonthSelector();
+            calculateKPIs();
+            updateChart();
+            renderSessionTabs();
+            // Select first session of the filtered list
+            const filtered = getFilteredSessions();
+            if (filtered.length > 0) {
+                selectedSessionIndex = liveSessions.indexOf(filtered[filtered.length - 1]);
+                renderDetailContainer(liveSessions[selectedSessionIndex]);
+            }
+        }
 
         function calculateKPIs() {
-            const totalDeals = liveSessions.reduce((sum, s) => sum + s.chartMetrics.deals, 0);
-            const totalViewers = liveSessions.reduce((sum, s) => sum + s.chartMetrics.viewers, 0);
-            const avgConversion = (liveSessions.reduce((sum, s) => sum + s.chartMetrics.conversion, 0) / liveSessions.length).toFixed(1);
+            const filteredSessions = getFilteredSessions();
+            const totalDeals = filteredSessions.reduce((sum, s) => sum + s.chartMetrics.deals, 0);
+            const totalViewers = filteredSessions.reduce((sum, s) => sum + s.chartMetrics.viewers, 0);
+            const avgConversion = filteredSessions.length > 0
+                ? (filteredSessions.reduce((sum, s) => sum + s.chartMetrics.conversion, 0) / filteredSessions.length).toFixed(1)
+                : 0;
 
             document.getElementById('totalDeals').textContent = totalDeals;
             document.getElementById('totalViewers').textContent = totalViewers;
@@ -815,7 +1067,10 @@
             const container = document.getElementById('sessionTabs');
             container.innerHTML = '';
 
-            liveSessions.forEach((session, index) => {
+            const filteredSessions = getFilteredSessions();
+
+            filteredSessions.forEach((session) => {
+                const index = liveSessions.indexOf(session);
                 const tab = document.createElement('div');
                 tab.className = `session-tab ${index === selectedSessionIndex ? 'active' : ''}`;
                 tab.onclick = () => selectSession(index);
@@ -923,13 +1178,15 @@
             gradient.addColorStop(0, 'rgba(102, 126, 234, 0.4)');
             gradient.addColorStop(1, 'rgba(118, 75, 162, 0.05)');
 
+            const filteredSessions = getFilteredSessions();
+
             trendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: liveSessions.map(s => s.date),
+                    labels: filteredSessions.map(s => s.date),
                     datasets: [{
                         label: '成交单数',
-                        data: liveSessions.map(s => s.chartMetrics.deals),
+                        data: filteredSessions.map(s => s.chartMetrics.deals),
                         borderColor: '#667eea',
                         backgroundColor: gradient,
                         borderWidth: 4,
@@ -1000,24 +1257,27 @@
             gradient.addColorStop(0, 'rgba(102, 126, 234, 0.4)');
             gradient.addColorStop(1, 'rgba(118, 75, 162, 0.05)');
 
+            const filteredSessions = getFilteredSessions();
             let label, data;
             switch(currentMetric) {
                 case 'deals':
                     label = '成交单数';
-                    data = liveSessions.map(s => s.chartMetrics.deals);
+                    data = filteredSessions.map(s => s.chartMetrics.deals);
                     break;
                 case 'viewers':
                     label = '场观人数';
-                    data = liveSessions.map(s => s.chartMetrics.viewers);
+                    data = filteredSessions.map(s => s.chartMetrics.viewers);
                     break;
                 case 'conversion':
                     label = '转化率 (%)';
-                    data = liveSessions.map(s => s.chartMetrics.conversion);
+                    data = filteredSessions.map(s => s.chartMetrics.conversion);
                     break;
             }
 
+            trendChart.data.labels = filteredSessions.map(s => s.date);
             trendChart.data.datasets[0].label = label;
             trendChart.data.datasets[0].data = data;
+            trendChart.data.datasets[0].backgroundColor = gradient;
             trendChart.update();
         }
     </script>
