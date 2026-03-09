@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>直播复盘仪表盘</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>直播复盘数据汇报</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,2061 +13,1229 @@
             box-sizing: border-box;
         }
 
-        /* Login Screen */
-        .login-screen {
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 头部横幅 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .export-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 月份筛选 */
+        .filter-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 10px 24px;
+            margin: 0 8px;
+            border-radius: 25px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 数据口径说明 */
+        .data-definition-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .definition-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .definition-header h2 {
+            font-size: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+            color: #667eea;
+        }
+
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .definition-content {
+            margin-top: 20px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            max-height: 500px;
+        }
+
+        .definition-content.collapsed {
+            max-height: 0;
+            margin-top: 0;
+        }
+
+        .definition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .definition-item {
+            background: linear-gradient(135deg, #f8f9ff, #fff5ff);
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .definition-item .name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .definition-item .formula {
+            font-size: 13px;
+            color: #666;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .definition-item .formula code {
+            color: #764ba2;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* 数据概览卡片 */
+        .overview-section {
+            margin-bottom: 40px;
+        }
+
+        .overview-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .overview-section h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .overview-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .overview-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .overview-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .overview-card .label {
+            color: #666;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .month-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 图表区域 */
+        .charts-section {
+            margin-bottom: 40px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        /* 单场详情卡片 */
+        .sessions-section {
+            margin-bottom: 40px;
+        }
+
+        .sessions-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #f0f0f0;
+        }
+
+        .sessions-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .sessions-scroll::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .sessions-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+
+        .session-card {
+            min-width: 320px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .session-header h3 {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .session-header .date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .session-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .data-funnel {
+            margin-bottom: 15px;
+        }
+
+        .funnel-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .funnel-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .funnel-bar {
+            flex: 1;
+            margin: 0 10px;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .funnel-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+
+        .funnel-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .session-review {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .review-item {
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .review-item .highlight {
+            color: #10b981;
+        }
+
+        .review-item .problem {
+            color: #f59e0b;
+        }
+
+        .review-item .action {
+            color: #667eea;
+        }
+
+        /* 底部总结 */
+        .summary-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .summary-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+        }
+
+        .timeline-item h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 空状态提示 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-card .value {
+                font-size: 24px;
+            }
+
+            .filter-btn {
+                padding: 8px 16px;
+                margin: 5px;
+                font-size: 14px;
+            }
+
+            .definition-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 导出时的背景 */
+        .exporting {
+            background: #f5f7fa !important;
+        }
+
+        /* 登录弹窗 */
+        .login-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #F5F7FA;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.3s, visibility 0.3s;
         }
 
-        .login-screen.hidden {
+        .login-modal.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
         }
 
-        .login-card {
-            background: #FFFFFF;
+        .login-box {
+            background: white;
+            padding: 40px;
             border-radius: 20px;
-            padding: 48px 40px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             text-align: center;
-            width: 100%;
+            width: 90%;
             max-width: 400px;
-            animation: fadeInUp 0.5s ease-out;
-            position: relative;
-            border: 1px solid #E5E7EB;
         }
 
-        .login-icon {
-            font-size: 56px;
-            margin-bottom: 16px;
-        }
-
-        .login-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gray-800);
-            margin-bottom: 8px;
-        }
-
-        .login-subtitle {
-            color: var(--gray-500);
-            font-size: 14px;
-            margin-bottom: 32px;
-        }
-
-        .login-input-group {
-            position: relative;
+        .login-box .logo {
+            font-size: 50px;
             margin-bottom: 20px;
+        }
+
+        .login-box h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .login-box p {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
         }
 
         .login-input {
             width: 100%;
-            padding: 14px 16px;
-            font-size: 15px;
-            border: 1px solid var(--gray-200);
-            border-radius: 10px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
             outline: none;
-            transition: all 0.2s ease;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
         }
 
         .login-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-light);
+            border-color: #667eea;
         }
 
-        .login-button {
+        .login-input.error {
+            border-color: #ef4444;
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .login-btn {
             width: 100%;
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 600;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            background: var(--primary);
             border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .login-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .login-button:active {
-            transform: translateY(0);
-        }
-
-        .login-error {
-            color: var(--danger);
-            font-size: 13px;
-            margin-top: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .login-error.show {
-            opacity: 1;
-        }
-
-        :root {
-            --primary: #3B82F6;
-            --primary-dark: #2563EB;
-            --primary-light: #EFF6FF;
-            --secondary: #64748B;
-            --accent: #F59E0B;
-            --success: #10B981;
-            --success-bg: #D1FAE5;
-            --warning: #F59E0B;
-            --warning-bg: #FEF3C7;
-            --danger: #EF4444;
-            --danger-bg: #FEE2E2;
-            --dark: #1E293B;
-            --gray-50: #F9FAFB;
-            --gray-100: #F3F4F6;
-            --gray-200: #E5E7EB;
-            --gray-300: #D1D5DB;
-            --gray-400: #9CA3AF;
-            --gray-500: #6B7280;
-            --gray-600: #4B5563;
-            --gray-700: #374151;
-            --gray-800: #1F2937;
-            --white: #FFFFFF;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 14px;
-            --radius-xl: 18px;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: #F5F7FA;
-            min-height: 100vh;
-            padding: 24px;
-            color: var(--gray-800);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 32px;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        .header-card {
-            background: #FFFFFF;
-            border-radius: var(--radius-xl);
-            padding: 24px 32px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--gray-200);
-        }
-
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--gray-800);
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: var(--gray-500);
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        /* Module Cards */
-        .module {
-            background: #FFFFFF;
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--gray-200);
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        .module-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .module-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gray-800);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-left: 12px;
-            border-left: 3px solid var(--primary);
-        }
-
-        .module-title-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-light);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        /* KPI Cards */
-        .kpi-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .kpi-card {
-            background: #FFFFFF;
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            text-align: center;
-            border: 1px solid var(--gray-200);
-            transition: all 0.2s ease;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-light);
-        }
-
-        .kpi-label {
-            font-size: 13px;
-            color: var(--gray-500);
-            margin-bottom: 10px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .kpi-icon {
+            border-radius: 30px;
             font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .kpi-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--gray-800);
-            line-height: 1;
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .kpi-unit {
+        .error-message {
+            color: #ef4444;
             font-size: 14px;
-            color: var(--gray-500);
-            font-weight: 400;
-            margin-left: 4px;
+            margin-top: 15px;
+            display: none;
         }
 
-        .kpi-definition {
-            font-size: 11px;
-            color: var(--gray-400);
-            margin-top: 6px;
-            line-height: 1.4;
+        .error-message.show {
+            display: block;
         }
 
-        .kpi-trend {
-            margin-top: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 12px;
-            display: inline-block;
+        /* 页面内容隐藏 */
+        .page-content {
+            filter: blur(0);
+            transition: filter 0.3s;
+            pointer-events: auto;
         }
 
-        .kpi-trend.up {
-            background: var(--success-bg);
-            color: var(--success);
-        }
-        .funnel-item {
-            animation: funnelSlideIn 0.5s ease-out forwards;
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-
-        .funnel-item:nth-child(1) { animation-delay: 0.1s; }
-        .funnel-item:nth-child(2) { animation-delay: 0.15s; }
-        .funnel-item:nth-child(3) { animation-delay: 0.2s; }
-        .funnel-item:nth-child(4) { animation-delay: 0.25s; }
-        .funnel-item:nth-child(5) { animation-delay: 0.3s; }
-
-        @keyframes funnelSlideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Review Block Animation */
-        .review-block {
-            animation: blockFadeIn 0.6s ease-out forwards;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        .review-block.highlights { animation-delay: 0.2s; }
-        .review-block.issues { animation-delay: 0.3s; }
-        .review-block.actions { animation-delay: 0.4s; }
-
-        @keyframes blockFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Stat Sparkline */
-        .stat-sparkline {
-            display: flex;
-            gap: 2px;
-            align-items: flex-end;
-            height: 20px;
-            margin-top: 8px;
-        }
-
-        .stat-sparkline span {
-            flex: 1;
-            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-            border-radius: 2px;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-
-        .stat-sparkline span:hover {
-            opacity: 1;
-        }
-
-        /* Improved Tab Hover */
-        .session-tab .stats-preview {
-            font-size: 11px;
-            color: var(--gray-500);
-            margin-top: 4px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .session-tab.active .stats-preview {
-            color: rgba(255,255,255,0.8);
-        }
-
-        /* Gradient Text Animation */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .animated-gradient {
-            background: linear-gradient(270deg, #667eea, #764ba2, #667eea);
-            background-size: 200% 200%;
-            animation: gradientShift 3s ease infinite;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .kpi-trend.up {
-            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
-            color: white;
-        }
-
-        /* Chart Toggle */
-        .chart-toggle {
-            display: flex;
-            gap: 4px;
-            background: var(--gray-100);
-            padding: 4px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--gray-200);
-        }
-
-        .toggle-btn {
-            padding: 8px 16px;
-            border: none;
-            background: transparent;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray-600);
-            transition: all 0.2s ease;
-        }
-
-        .toggle-btn.active {
-            background: #FFFFFF;
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .toggle-btn:hover:not(.active) {
-            color: var(--gray-700);
-            background: var(--gray-200);
-        }
-
-        /* Month Selector */
-        .month-selector {
-            display: flex;
-            gap: 4px;
-            background: var(--gray-100);
-            padding: 4px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--gray-200);
-        }
-
-        .month-btn {
-            padding: 8px 16px;
-            border: none;
-            background: transparent;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray-600);
-            transition: all 0.2s ease;
-        }
-
-        .month-btn.active {
-            background: #FFFFFF;
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .month-btn:hover:not(.active) {
-            color: var(--gray-700);
-            background: var(--gray-200);
-        }
-
-        /* Filter Toolbar */
-        .filter-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            padding: 16px;
-            background: var(--gray-50);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
-            margin-bottom: 20px;
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--gray-600);
-        }
-
-        .filter-input {
-            padding: 8px 12px;
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            background: white;
-            min-width: 120px;
-        }
-
-        .filter-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-light);
-        }
-
-        .filter-divider {
-            width: 1px;
-            height: 24px;
-            background: var(--gray-200);
-            margin: 0 4px;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: var(--gray-700);
-            cursor: pointer;
+        .page-content.locked {
+            filter: blur(10px);
+            pointer-events: none;
             user-select: none;
-        }
-
-        .checkbox-label input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: var(--primary);
-        }
-
-        .btn-reset {
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            color: var(--gray-600);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-reset:hover {
-            background: var(--gray-100);
-            border-color: var(--gray-300);
-        }
-
-        /* Compare Panel */
-        .compare-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-            border-top: 1px solid var(--gray-200);
-            padding: 16px 24px;
-            z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .compare-panel.show {
-            transform: translateY(0);
-        }
-
-        .compare-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .compare-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .compare-close {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--gray-400);
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .compare-close:hover {
-            color: var(--gray-600);
-        }
-
-        .compare-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .compare-item {
-            background: var(--gray-50);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            text-align: center;
-        }
-
-        .compare-item-date {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gray-600);
-            margin-bottom: 4px;
-        }
-
-        .compare-item-title {
-            font-size: 11px;
-            color: var(--gray-500);
-            margin-bottom: 8px;
-        }
-
-        .compare-item-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .compare-item-diff {
-            font-size: 11px;
-            margin-top: 4px;
-        }
-
-        .compare-item-diff.up {
-            color: var(--success);
-        }
-
-        .compare-item-diff.down {
-            color: var(--danger);
-        }
-
-        .compare-actions {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .btn-primary {
-            padding: 10px 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Session Tab with Checkbox */
-        .session-tab-wrapper {
-            position: relative;
-        }
-
-        .session-tab-checkbox {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            z-index: 10;
-            accent-color: var(--primary);
-        }
-
-        .session-tab.has-checkbox {
-            padding-left: 32px;
-        }
-
-        /* Chart Container */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            background: #FFFFFF;
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            border: 1px solid var(--gray-200);
-        }
-
-        /* Session Tabs */
-        .session-tabs {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 8px 4px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--gray-300) transparent;
-        }
-
-        .session-tabs::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .session-tabs::-webkit-scrollbar-track {
-            background: transparent;
-            border-radius: 3px;
-        }
-
-        .session-tabs::-webkit-scrollbar-thumb {
-            background: var(--gray-300);
-            border-radius: 3px;
-        }
-
-        .session-tab {
-            flex-shrink: 0;
-            padding: 14px 18px;
-            border-radius: var(--radius-lg);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid var(--gray-200);
-            background: #FFFFFF;
-            position: relative;
-            min-width: 130px;
-        }
-
-        .session-tab:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--gray-300);
-        }
-
-        .session-tab.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-
-        .session-tab.active .session-date,
-        .session-tab.active .session-title,
-        .session-tab.active .stats-preview {
-            color: white;
-        }
-
-        .session-date {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 4px;
-        }
-
-        .session-title {
-            font-size: 12px;
-            color: var(--gray-500);
-            font-weight: 400;
-        }
-
-        .highlight-badge {
-            position: absolute;
-            top: 6px;
-            right: 8px;
-            font-size: 18px;
-        }
-
-        .session-tab .stats-preview {
-            font-size: 11px;
-            color: var(--gray-400);
-            margin-top: 6px;
-            display: flex;
-            gap: 8px;
-        }
-
-        /* Detail Container */
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Quantitative Section */
-        .quantitative-section {
-            background: var(--primary);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quantitative-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-title-white {
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .funnel-grid {
-            display: grid;
-            gap: 10px;
-        }
-
-        .funnel-item {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: var(--radius-md);
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s ease;
-        }
-
-        .funnel-item:hover {
-            background: white;
-            transform: translateX(4px);
-        }
-
-        .funnel-label {
-            font-size: 13px;
-            color: var(--gray-600);
-            font-weight: 600;
-        }
-
-        .funnel-label-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .metric-def {
-            font-size: 11px;
-            color: var(--gray-400);
-            font-weight: 400;
-            background: var(--gray-100);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .funnel-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gray-800);
-            white-space: nowrap;
-        }
-
-        /* Qualitative Section */
-        .qualitative-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .review-block {
-            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            border: 1px solid var(--gray-200);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            animation: blockFadeIn 0.6s ease-out forwards;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        .review-block.highlights { animation-delay: 0.2s; }
-        .review-block.issues { animation-delay: 0.3s; }
-        .review-block.actions { animation-delay: 0.4s; }
-
-        .review-block:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-        }
-
-        .review-block::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 5px;
-        }
-
-        .review-block.highlights::before {
-            background: linear-gradient(180deg, #2ECC71 0%, #27AE60 100%);
-        }
-
-        .review-block.issues::before {
-            background: linear-gradient(180deg, #F39C12 0%, #E67E22 100%);
-        }
-
-        .review-block.actions::before {
-            background: linear-gradient(180deg, #3498DB 0%, #2980B9 100%);
-        }
-
-        .review-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .review-icon-circle {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-
-        .review-block.highlights .review-icon-circle {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.15) 100%);
-        }
-
-        .review-block.issues .review-icon-circle {
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(230, 126, 34, 0.15) 100%);
-        }
-
-        .review-block.actions .review-icon-circle {
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
-        }
-
-        .review-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--gray-800);
-        }
-
-        .review-list {
-            list-style: none;
-        }
-
-        .review-list li {
-            padding: 14px 0 14px 32px;
-            position: relative;
-            color: var(--gray-700);
-            line-height: 1.8;
-            font-size: 15px;
-            border-bottom: 1px solid var(--gray-100);
-            transition: all 0.2s ease;
-        }
-
-        .review-list li:hover {
-            background: rgba(102, 126, 234, 0.03);
-            padding-left: 36px;
-        }
-
-        .review-list li:last-child {
-            border-bottom: none;
-        }
-
-        .review-list li::before {
-            content: '';
-            position: absolute;
-            left: 12px;
-            top: 22px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: transform 0.2s ease;
-        }
-
-        .review-list li:hover::before {
-            transform: scale(1.3);
-        }
-
-        .empty-state {
-            color: var(--gray-500);
-            font-style: italic;
-            padding: 24px;
-            text-align: center;
-            background: var(--gray-100);
-            border-radius: var(--radius-lg);
-            font-size: 15px;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.05) rotate(2deg); }
-        }
-
-        .fade-in {
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        /* Session Header Info */
-        .session-info-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .session-core {
-            color: var(--gray-600);
-            font-size: 14px;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-
-        /* Month Selector */
-        .month-selector {
-            display: flex;
-            gap: 8px;
-            background: var(--gray-100);
-            padding: 6px;
-            border-radius: var(--radius-xl);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
-            margin-right: 12px;
-        }
-
-        .month-btn {
-            padding: 10px 20px;
-            border: none;
-            background: transparent;
-            border-radius: var(--radius-xl);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-600);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .month-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.3s ease;
-            z-index: 0;
-        }
-
-        .month-btn.active {
-            color: white;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .month-btn.active::before {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .month-btn span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .month-btn:hover:not(.active) {
-            color: var(--gray-700);
-            background: rgba(102, 126, 234, 0.05);
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-card">
-            <div class="login-icon">🎥</div>
-            <h1 class="login-title">直播复盘仪表盘</h1>
-            <p class="login-subtitle">请输入密码以访问数据</p>
-            <div class="login-input-group">
-                <input type="password" class="login-input" id="passwordInput" placeholder="请输入密码" onkeypress="handleKeyPress(event)">
-            </div>
-            <button class="login-button" onclick="handleLogin()">登录</button>
-            <div class="login-error" id="loginError">密码错误，请重试</div>
+    <!-- 登录弹窗 -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-box">
+            <div class="logo">🔐</div>
+            <h2>请输入访问密码</h2>
+            <p>直播复盘数据汇报 · 机密文件</p>
+            <input type="password" class="login-input" id="loginInput" placeholder="输入密码" onkeypress="handleKeyPress(event)">
+            <button class="login-btn" onclick="verifyPassword()">登 录</button>
+            <div class="error-message" id="errorMessage">密码错误，请重新输入</div>
         </div>
     </div>
 
-    <div class="container">
-        <header>
-            <div class="header-card">
-                <h1>🎥 直播复盘仪表盘</h1>
-                <p class="subtitle">数据驱动 · 持续优化</p>
-            </div>
-        </header>
+    <button class="export-btn" onclick="exportToImage()">📷 导出长图</button>
 
-        <!-- Module A: Trend Overview -->
-        <section class="module">
-            <div class="module-header">
-                <h2 class="module-title">
-                    <span class="module-title-icon">📊</span>
-                    战役总览
-                </h2>
-                <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-                    <div class="month-selector" id="monthSelector">
+    <div class="container page-content locked" id="content">
+        <!-- 头部横幅 -->
+        <div class="header">
+            <h1>🎯 直播复盘数据汇报</h1>
+            <p>2024.1.31 - 2024.3.8 共 11 场直播实战全记录</p>
+        </div>
+
+        <!-- 月份筛选 -->
+        <section class="filter-section">
+            <button class="filter-btn active" data-month="all">全部</button>
+            <button class="filter-btn" data-month="1">1 月</button>
+            <button class="filter-btn" data-month="2">2 月</button>
+            <button class="filter-btn" data-month="3">3 月</button>
+        </section>
+
+        <!-- 数据口径说明 -->
+        <section class="data-definition-section">
+            <div class="definition-header" onclick="toggleDefinition()">
+                <h2>📊 数据口径说明</h2>
+                <span class="toggle-icon" id="toggleIcon">▼</span>
+            </div>
+            <div class="definition-content" id="definitionContent">
+                <div class="definition-grid">
+                    <div class="definition-item">
+                        <div class="name">👥 场观人次</div>
+                        <div>参与直播的真实用户数量</div>
                     </div>
-                    <div class="chart-toggle">
-                        <button class="toggle-btn active" data-metric="deals">成交单数</button>
-                        <button class="toggle-btn" data-metric="viewers">场观人数</button>
-                        <button class="toggle-btn" data-metric="conversion">转化率</button>
+                    <div class="definition-item">
+                        <div class="name">💰 累计成交</div>
+                        <div>直播间成交正式课用户量</div>
+                        <div class="formula"><code>直播当天，参与福袋并购买大单人数</code></div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="name">📈 转化率</div>
+                        <div>成交人数占场观人数的比例</div>
+                        <div class="formula"><code>成交人数 ÷ 场观人数 × 100%</code></div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="name">🎯 有效用户占比</div>
+                        <div>抢福袋用户占场观人数的比例</div>
+                        <div class="formula"><code>抢福袋人数 ÷ 场观人数 × 100%</code></div>
+                    </div>
+                    <div class="definition-item">
+                        <div class="name">✅ 有效用户关单率</div>
+                        <div>成交人数占抢福袋人数的比例</div>
+                        <div class="formula"><code>成交人数 ÷ 抢福袋人数 × 100%</code></div>
                     </div>
                 </div>
-            </div>
-
-            <!-- 筛选工具栏 -->
-            <div class="filter-toolbar">
-                <div class="filter-group">
-                    <span class="filter-label">日期范围</span>
-                    <input type="date" class="filter-input" id="dateStart">
-                    <span style="color: var(--gray-400);">-</span>
-                    <input type="date" class="filter-input" id="dateEnd">
-                </div>
-
-                <div class="filter-divider"></div>
-
-                <div class="filter-group">
-                    <span class="filter-label">成交单数</span>
-                    <select class="filter-input" id="filterDeals">
-                        <option value="all">全部</option>
-                        <option value="gt10">>10 单</option>
-                        <option value="5to10">5-10 单</option>
-                        <option value="lt5"><5 单</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <span class="filter-label">转化率</span>
-                    <select class="filter-input" id="filterConversion">
-                        <option value="all">全部</option>
-                        <option value="gt30">>30%</option>
-                        <option value="20to30">20-30%</option>
-                        <option value="lt20"><20%</option>
-                    </select>
-                </div>
-
-                <div class="filter-divider"></div>
-
-                <label class="checkbox-label">
-                    <input type="checkbox" id="filterHighlight">
-                    只看高光场次
-                </label>
-
-                <div style="flex: 1;"></div>
-
-                <button class="btn-reset" onclick="resetFilters()">重置筛选</button>
-            </div>
-
-            <!-- 直播项目说明 -->
-            <div class="project-description">
-                <div class="project-description-icon">🎯</div>
-                <div class="project-description-content">
-                    <h3><span>📢</span> 锦州战役课后直播</h3>
-                    <p>
-                        <strong>合肥锦州战役小马启程套餐直播</strong> — CC 伙伴邀约试听过的用户进入直播间；
-                        直播间发放福袋，介绍课程、讲解优惠，促进 CC 伙伴成交。
-                    </p>
-                </div>
-            </div>
-
-            <div class="kpi-cards">
-                <div class="kpi-card">
-                    <div class="kpi-label"><span class="kpi-icon">📦</span> 累计总成交</div>
-                    <div class="kpi-definition">进入直播间成交用户量</div>
-                    <div class="kpi-value"><span id="totalDeals">0</span><span class="kpi-unit">单</span></div>
-                    <div class="kpi-trend up">📈 场均 <span id="avgDeals">0</span>单</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label"><span class="kpi-icon">💹</span> 平均转化率</div>
-                    <div class="kpi-definition">进入直播间成交用户量 ÷ 直播间抢福袋人数</div>
-                    <div class="kpi-value"><span id="avgConversion">0</span><span class="kpi-unit">%</span></div>
-                    <div class="kpi-trend up">✨ 最高 <span id="maxConversion">0</span>%</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label"><span class="kpi-icon">👁</span> 总场观人次</div>
-                    <div class="kpi-definition">进入直播间的总人数</div>
-                    <div class="kpi-value"><span id="totalViewers">0</span><span class="kpi-unit">人</span></div>
-                    <div class="kpi-trend up">🔥 场均 <span id="avgViewers">0</span>人</div>
-                </div>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="trendChart"></canvas>
             </div>
         </section>
 
-        <!-- Module B: Session Selector -->
-        <section class="module">
-            <div class="module-header">
-                <h2 class="module-title">
-                    <span class="module-title-icon">📅</span>
-                    选择场次
-                </h2>
-            </div>
-            <div class="session-tabs" id="sessionTabs">
+        <!-- 数据概览 -->
+        <section class="overview-section">
+            <h2>核心数据概览 <span class="month-label" id="monthLabel"></span></h2>
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="icon">👥</div>
+                    <div class="value" id="totalViews">460</div>
+                    <div class="label">总场观人数</div>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">🎁</div>
+                    <div class="value" id="totalLuckyDraw">355</div>
+                    <div class="label">总抢福袋人数</div>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">💰</div>
+                    <div class="value" id="totalSales">108</div>
+                    <div class="label">总成交单数</div>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">📈</div>
+                    <div class="value" id="avgConversion">26.5%</div>
+                    <div class="label">平均转化率</div>
+                </div>
             </div>
         </section>
 
-        <!-- Module C: Detail Container -->
-        <section class="module" id="detailContainer">
+        <!-- 图表区域 -->
+        <section class="charts-section">
+            <h2>数据趋势分析</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>📊 转化率走势</h3>
+                    <canvas id="conversionChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📈 场观 vs 成交对比</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 单场详情 -->
+        <section class="sessions-section">
+            <h2>各场次详情（滑动查看）</h2>
+            <div class="sessions-scroll" id="sessionsContainer">
+                <!-- 由 JS 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 底部总结 -->
+        <section class="summary-section">
+            <h2>📋 核心策略演进</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>1.31 首秀探索期</h4>
+                    <p>首创"学科规划 + 福利对赌"逻辑，五页 PPT 闭环，建立 15 分钟高频循环节奏</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>2.5-2.12 模型验证期</h4>
+                    <p>"直播势能 + 私域成交"路径跑通，"CC 唱戏"模式成功，饱和式宣发激活私域流量</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>2.25-2.28 优化升级期</h4>
+                    <p>"试听 + 直播"闭环打通，视觉降维打击 + 水军答疑互动，直播间变身"咨询室"</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>3.2-3.8 稳定产出期</h4>
+                    <p>开学季 + 节日营销双驱动，转化率稳定在 25%-40%，形成可复制的 SOP</p>
+                </div>
+            </div>
         </section>
     </div>
 
     <script>
-        const liveSessions = [
+        // 正确密码
+        const CORRECT_PASSWORD = '51talk2026';
+
+        // 验证密码
+        function verifyPassword() {
+            const input = document.getElementById('loginInput');
+            const modal = document.getElementById('loginModal');
+            const errorMessage = document.getElementById('errorMessage');
+            const content = document.getElementById('content');
+
+            if (input.value === CORRECT_PASSWORD) {
+                // 密码正确，隐藏登录弹窗
+                modal.classList.add('hidden');
+                content.classList.remove('locked');
+                // 移除输入框内容
+                input.value = '';
+                errorMessage.classList.remove('show');
+            } else {
+                // 密码错误，显示错误提示
+                input.classList.add('error');
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    input.classList.remove('error');
+                }, 300);
+            }
+        }
+
+        // 处理回车键
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                verifyPassword();
+            }
+        }
+
+        // 直播数据
+        const sessions = [
             {
-                "id": "20260131",
-                "date": "1月31日",
-                "title": "春节攻势·启动战",
-                "isHighlight": false,
-                "coreTheme": "模式验证期的“逻辑跑通”，确立了“PPT闭环”与“实物锚点”的打法基础",
-                "chartMetrics": {
-                    "deals": 6,
-                    "viewers": 120,
-                    "conversion": 15.8
-                },
-                "detailData": {
-                    "time": "15:00/19:30 (双场轮播)",
-                    "realUV": "120人",
-                    "interaction": "38人",
-                    "conversion": "15.8%",
-                    "revenue": "6单"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "五页PPT闭环：摒弃传统叫卖，首创“学科规划+福利对赌”逻辑",
-                        "实物价值锚定：重新设计福袋结构，重点突出“香蕉笔袋+纸质讲义”的实物价值",
-                        "15分钟高频循环：建立“5分钟干货+5分钟产品+5分钟逼单”的节奏"
-                    ],
-                    "issues": [
-                        "宣发启动过晚：仅提前不到24小时预热，导致流量开口过小",
-                        "主播专业度待磨合：团队首秀，在逼单节奏和情绪调动上仍有卡顿"
-                    ],
-                    "actions": [
-                        "SOP极简优化：缩短学科宣讲比例，强化“纯福利场”心智",
-                        "CC提前介入：确立新流程——家长抢到福袋后，CC立即以“核销”名义介入关单"
-                    ]
-                }
+                month: 1,
+                date: '2024.1.31',
+                name: '春节攻势·启动战（首秀）',
+                duration: '2 小时',
+                views: 72,
+                luckyDraw: 38,
+                sales: 6,
+                conversion: 8.33,
+                validRate: 52.7,
+                closeRate: 15.8,
+                highlights: ['首创"学科规划 + 福利对赌"逻辑', '实物价值锚定：香蕉笔袋 + 纸质讲义', '15 分钟高频循环节奏'],
+                problems: ['宣发启动过晚，仅提前 24 小时', '主播专业度待磨合'],
+                actions: ['SOP 极简优化', 'CC 提前介入核销']
             },
             {
-                "id": "20260205",
-                "date": "2月5日",
-                "title": "口碑发酵·升温战",
-                "isHighlight": true,
-                "coreTheme": "战术成型期的“效率之战”，验证了“CC配合逼单”的高效性，转化率达巅峰",
-                "chartMetrics": {
-                    "deals": 10,
-                    "viewers": 46,
-                    "conversion": 30.3
-                },
-                "detailData": {
-                    "time": "15:00-16:00 (1h)",
-                    "realUV": "46人",
-                    "interaction": "33人 (71.7%)",
-                    "conversion": "30.3%",
-                    "revenue": "10单"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "“CC唱戏”模式跑通：直播间负责营造“仅限今天”的紧迫感，CC在私域迅速跟进",
-                        "实物堆砌感：新增《自然拼读宝典礼盒》，实物的份量感弥补了线上课的虚拟感",
-                        "极致留存：利用“左上角引导PPT”，成功将71.7%的“看客”转化为“销售线索”"
-                    ],
-                    "issues": [
-                        "池子太小：除去内部人员，真实用户仅46人",
-                        "流失跟进：仍有23位领福袋的高意向用户未成交"
-                    ],
-                    "actions": [
-                        "全力搞流量：既然转化模型（CC关单）已跑通，核心任务转为“扩容”",
-                        "裂变启动：利用老学员转发“领Max福袋”海报，通过“老带新”策略突破百人场观"
-                    ]
-                }
+                month: 2,
+                date: '2024.2.5',
+                name: '口碑发酵·升温战',
+                duration: '1.5 小时',
+                views: 47,
+                luckyDraw: 33,
+                sales: 10,
+                conversion: 21.27,
+                validRate: 70.21,
+                closeRate: 30.3,
+                highlights: ['"CC 唱戏"模式跑通', '实物堆砌感增强信任', '71.7% 看客转化为线索'],
+                problems: ['流量天花板明显，仅 47 人', '23 位高意向用户未成交'],
+                actions: ['全力搞流量，扩容私域池']
             },
             {
-                "id": "20260208",
-                "date": "2月8日",
-                "title": "节前冲刺战",
-                "isHighlight": false,
-                "coreTheme": "流量蓄水期的“压力测试”，高转化但低流量，暴露了引流短板",
-                "chartMetrics": {
-                    "deals": 8,
-                    "viewers": 29,
-                    "conversion": 29.6
-                },
-                "detailData": {
-                    "time": "19:00-21:00 (2h)",
-                    "realUV": "29人",
-                    "interaction": "27人 (93%)",
-                    "conversion": "29.6%",
-                    "revenue": "8单"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "互动率93%：几乎每一个进来的真实家长都参与了福袋互动",
-                        "转化率29.6%：在没有大规模“逼单”氛围下，依然保持了近30%的转化"
-                    ],
-                    "issues": [
-                        "流量获取遭遇瓶颈：时长与流量不成正比",
-                        "预热动作不足，导致私域池塘里的鱼没有被激活"
-                    ],
-                    "actions": [
-                        "立刻启动饱和式宣发：必须在下一场前，通过高频次的海报轰炸，强制唤醒沉睡客户"
-                    ]
-                }
+                month: 2,
+                date: '2024.2.8',
+                name: '节前冲刺战',
+                duration: '2 小时',
+                views: 35,
+                luckyDraw: 27,
+                sales: 8,
+                conversion: 22.85,
+                validRate: 77.14,
+                closeRate: 29.62,
+                highlights: ['转化率提升至 22.85%'],
+                problems: ['流量获取遭遇瓶颈', '单纯靠时长无法触达新流量'],
+                actions: ['启动饱和式宣发']
             },
             {
-                "id": "20260212",
-                "date": "2月12日",
-                "title": "年前收官战",
-                "isHighlight": true,
-                "coreTheme": "策略验证成功的“收割之战”，全链路闭环配合，实现量价齐升",
-                "chartMetrics": {
-                    "deals": 20,
-                    "viewers": 68,
-                    "conversion": 35
-                },
-                "detailData": {
-                    "time": "18:30-22:00 (3.5h)",
-                    "realUV": "68人",
-                    "interaction": "57人 (83.8%)",
-                    "conversion": "35%",
-                    "revenue": "20单"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "流量破局成功：客户数从29人激增至68人，证明“海报轰炸”策略有效激活了私域僵尸粉",
-                        "高压下的高转化：在流量翻倍的情况下，转化率不降反升（达到35%）",
-                        "长直播模型验证：3.5小时的时长支撑了更完整的“讲品-互动-逼单”循环"
-                    ],
-                    "issues": [
-                        "开场前15分钟节奏略拖沓",
-                        "部分环节的过渡可以更紧凑"
-                    ],
-                    "actions": [
-                        "固化'逼单通栏'的设计模板",
-                        "剪辑高光时刻做短视频分发",
-                        "优化开场流程，加快进入主题"
-                    ]
-                }
+                month: 2,
+                date: '2024.2.12',
+                name: '年前收官战（终局）',
+                duration: '3.5 小时',
+                views: 68,
+                luckyDraw: 57,
+                sales: 20,
+                conversion: 29.41,
+                validRate: 83.8,
+                closeRate: 35.08,
+                highlights: ['饱和式攻击：15 张倒计时海报', '流量破局成功，转化率 35%', '长直播模型验证成功'],
+                problems: [],
+                actions: ['继续深化倒计时截杀策略']
             },
             {
-                "id": "20260225",
-                "date": "2 月 25 日",
-                "title": "开工返场·补录战",
-                "isHighlight": true,
-                "coreTheme": "流量虽低，但效率极致的狙击战。验证了当天试听 + 直播逼单的黄金组合",
-                "chartMetrics": {
-                    "deals": 7,
-                    "viewers": 13,
-                    "conversion": 63.6
-                },
-                "detailData": {
-                    "time": "19:30-20:50 (1h 20min)",
-                    "realUV": "13 人",
-                    "interaction": "11 人 (84.6%)",
-                    "conversion": "63.6%",
-                    "revenue": "7 单"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "试听 + 直播闭环打通：当天试听完的用户，进入直播间后的转化极高（4 单）",
-                        "补录心智成功：海报和话术强调的内部特批、库存释放，给了犹豫客户一个完美的台阶"
-                    ],
-                    "issues": [
-                        "流量池太浅：只有 13 个真实用户，虽然转化率做到了极致，但总量（7 单）依然受限",
-                        "宣发不足：仅靠私域临时通知，覆盖面太窄"
-                    ],
-                    "actions": [
-                        "借势开学季 +2 月终局，启动 3 天倒计时轰炸",
-                        "强制导流：规定 26/27/28 这三天所有当天试听的家长，CC 必须在课后第一时间引导进入直播间",
-                        "直播咨询化：直播间专门留出时间段，回答试听后家长的常见疑虑"
-                    ]
-                }
+                month: 2,
+                date: '2024.2.25',
+                name: '开工返场·补录战',
+                duration: '1.3 小时',
+                views: 12,
+                luckyDraw: 11,
+                sales: 7,
+                conversion: 58.33,
+                validRate: 91.66,
+                closeRate: 63.63,
+                highlights: ['"试听 + 直播"闭环打通', '"补录"心智成功', '转化率高达 58.33%'],
+                problems: ['流量池太浅，仅 12 人'],
+                actions: ['全员动员搞流量', '强制导流试听用户进直播间']
             },
             {
-                "id": "20260228",
-                "date": "2 月 28 日",
-                "title": "合肥达标之战",
-                "isHighlight": true,
-                "coreTheme": "成功守住合肥基本盘，视觉降维打击 + 水军答疑双驱动",
-                "chartMetrics": {
-                    "deals": 11,
-                    "viewers": 45,
-                    "conversion": 24.4
-                },
-                "detailData": {
-                    "time": "19:00-22:20 (3h 20min)",
-                    "realUV": "45 人",
-                    "interaction": "38 人 (84.4%)",
-                    "conversion": "24.4%",
-                    "revenue": "11 单 (当日 7 单 + 往期 4 单)"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "视觉降维打击：全套更换 3D C4D + 磨砂玻璃高级感 PPT 和海报，建立高信任第一印象",
-                        "水军答疑互动：安排 CC 扮演家长提问，直播间变咨询室，直接促成 7 单现场转化",
-                        "目标 100% 达成：成功守住合肥基本盘，成交 11 单"
-                    ],
-                    "issues": [
-                        "后半程流量枯竭：20:30 后人数维持在 5 人以下低位",
-                        "直播时长过长：3 小时 20 分导致主播精力空耗"
-                    ],
-                    "actions": [
-                        "优化直播时长：缩短至 2-2.5 小时，集中精力打爆前半场",
-                        "固化视觉风格：继续使用 3D C4D + 磨砂玻璃设计语言",
-                        "深化水军配合：总结尖锐问题库，提升答疑转化效果"
-                    ]
-                }
+                month: 2,
+                date: '2024.2.28',
+                name: '合肥达标之战',
+                duration: '3.3 小时',
+                views: 49,
+                luckyDraw: 38,
+                sales: 11,
+                conversion: 22.44,
+                validRate: 77.55,
+                closeRate: 28.94,
+                highlights: ['3D C4D 视觉降维打击', '水军答疑互动成胜负手', '直播间变咨询室'],
+                problems: [],
+                actions: ['继续深化互动答疑模式']
             },
             {
-                "id": "20260302",
-                "date": "3 月 2 日",
-                "title": "闹元宵 抢头彩",
-                "isHighlight": true,
-                "coreTheme": "开学季 + 元宵节双热点驱动，验证缩短时长打爆前半场策略",
-                "chartMetrics": {
-                    "deals": 10,
-                    "viewers": 29,
-                    "conversion": 34.5
-                },
-                "detailData": {
-                    "time": "19:00-20:30 (1.5h)",
-                    "realUV": "29 人 (扣除 18 水军)",
-                    "interaction": "25 人 (86%)",
-                    "conversion": "34.5%",
-                    "revenue": "10 单 (8 单当期 +2 单往期)"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "福袋参与率 86%：29 个真实家长中有 25 人参与互动，留存能力极强",
-                        "转化率 34.5%：开学季 + 元宵节双重紧迫感，家长决策更快",
-                        "时长策略优化：1.5 小时集中打爆，20:30 后流量断崖验证缩短时长策略正确"
-                    ],
-                    "issues": [
-                        "峰值人数偏低：峰值约 12 人并发，低于 28 日场次的 20+ 人",
-                        "流量来源单一：主要依赖老学员复购，新客引流仍需加强"
-                    ],
-                    "actions": [
-                        "固化前半场打爆策略：集中资源在开播后 1 小时内完成核心转化",
-                        "加强老带新裂变：利用高复购优势，设计老学员推荐激励"
-                    ]
-                }
+                month: 3,
+                date: '2024.3.2',
+                name: '闹元宵 抢头彩',
+                duration: '2 小时',
+                views: 29,
+                luckyDraw: 25,
+                sales: 10,
+                conversion: 34.48,
+                validRate: 86.2,
+                closeRate: 40,
+                highlights: ['开学季 + 元宵节双重加持', '缩短时长、打爆前半场策略正确'],
+                problems: [],
+                actions: ['继续借势节日营销']
             },
             {
-                "id": "20260305",
-                "date": "3 月 5 日",
-                "title": "女神节专场直播",
-                "isHighlight": true,
-                "coreTheme": "节日热点驱动，高流量 + 高互动，验证节日营销策略有效性",
-                "chartMetrics": {
-                    "deals": 11,
-                    "viewers": 47,
-                    "conversion": 27.5
-                },
-                "detailData": {
-                    "time": "19:00-21:00 (2h)",
-                    "realUV": "47 人 (扣除 11 水军)",
-                    "interaction": "40 人 (85%)",
-                    "conversion": "27.5%",
-                    "revenue": "11 单"
-                },
-                "reviewText": {
-                    "highlights": [
-                        "流量新高：47 个真实家长，为近 3 场最高，节日热点引流效果显著",
-                        "福袋参与率 85%：40/47 的家长参与互动，用户粘性持续保持高位",
-                        "成交 11 单：单场成交数并列第二，节日消费意愿强烈"
-                    ],
-                    "issues": [
-                        "转化率 27.5%：相比 2 月 25 日 (63.6%) 和 3 月 2 日 (34.5%) 有所下滑",
-                        "流量虽高但转化不够精准：需分析未转化用户的具体顾虑"
-                    ],
-                    "actions": [
-                        "深化节日营销：总结女神节成功经验，复制到其他节日场景",
-                        "优化转化话术：针对高流量低转化问题，设计更有针对性的逼单策略",
-                        "加强私域跟进：对未成交的高意向用户进行定向回访"
-                    ]
-                }
+                month: 3,
+                date: '2024.3.5',
+                name: '女神节专场①',
+                duration: '2 小时',
+                views: 48,
+                luckyDraw: 40,
+                sales: 11,
+                conversion: 22.91,
+                validRate: 83.3,
+                closeRate: 27.5,
+                highlights: ['开学季到来，紧迫感提升'],
+                problems: ['需促进快速成交'],
+                actions: ['引导抢福袋用户联系顾问']
+            },
+            {
+                month: 3,
+                date: '2024.3.7',
+                name: '女神节专场②',
+                duration: '2 小时',
+                views: 53,
+                luckyDraw: 46,
+                sales: 13,
+                conversion: 24.52,
+                validRate: 86.79,
+                closeRate: 28.26,
+                highlights: ['人数集中在前 30 分钟', '蓄能充分'],
+                problems: [],
+                actions: ['继续保持截杀点直播']
+            },
+            {
+                month: 3,
+                date: '2024.3.8',
+                name: '女神节专场③',
+                duration: '2 小时',
+                views: 44,
+                luckyDraw: 40,
+                sales: 12,
+                conversion: 27.27,
+                validRate: 90.9,
+                closeRate: 30,
+                highlights: ['有效用户占比 90.9% 创新高'],
+                problems: [],
+                actions: ['持续关注福袋用户跟进']
             }
         ];
 
-        const CORRECT_PASSWORD = '51talk2026';
-        let currentMetric = 'deals';
-        let selectedSessionIndex = liveSessions.length - 1;
-        let trendChart = null;
-        let currentMonth = 'all'; // 'all' or month number
+        // 图表实例
+        let conversionChartInstance = null;
+        let salesChartInstance = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Focus password input on load
-            document.getElementById('passwordInput').focus();
-            renderMonthSelector();
-        });
+        // 当前筛选月份
+        let currentMonth = 'all';
 
-        function initApp() {
-            calculateKPIs();
-            renderSessionTabs();
-            renderDetailContainer(liveSessions[selectedSessionIndex]);
-            initChart();
-        }
-
-        // Login Functions
-        function handleLogin() {
-            const password = document.getElementById('passwordInput').value;
-            const errorElement = document.getElementById('loginError');
-
-            if (password === CORRECT_PASSWORD) {
-                document.getElementById('loginScreen').classList.add('hidden');
-                initApp();
-            } else {
-                errorElement.classList.add('show');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
-                setTimeout(() => {
-                    errorElement.classList.remove('show');
-                }, 2000);
-            }
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                handleLogin();
-            }
-        }
-
-        // Get filtered sessions based on selected month
-        function getFilteredSessions() {
+        // 获取筛选后的数据
+        function getFilteredData() {
             if (currentMonth === 'all') {
-                return liveSessions;
+                return sessions;
             }
-            return liveSessions.filter(session => {
-                // 优化正则表达式，处理日期中的空格（如"2 月 25 日" 或 "2 月 25 日"）
-                const monthMatch = session.date.match(/\s*(\d+)\s*月/);
-                return monthMatch && parseInt(monthMatch[1]) === currentMonth;
-            });
+            return sessions.filter(s => s.month === parseInt(currentMonth));
         }
 
-        // Get available months from data
-        function getAvailableMonths() {
-            const months = new Set();
-            liveSessions.forEach(session => {
-                // 优化正则表达式，处理日期中的空格
-                const monthMatch = session.date.match(/\s*(\d+)\s*月/);
-                if (monthMatch) {
-                    months.add(parseInt(monthMatch[1]));
-                }
-            });
-            return Array.from(months).sort((a, b) => a - b);
-        }
+        // 更新数据概览
+        function updateOverview() {
+            const filtered = getFilteredData();
 
-        function renderMonthSelector() {
-            const container = document.getElementById('monthSelector');
-            container.innerHTML = '';
-
-            // Add "All" option
-            const allBtn = document.createElement('button');
-            allBtn.className = `month-btn ${currentMonth === 'all' ? 'active' : ''}`;
-            allBtn.textContent = '全部';
-            allBtn.onclick = () => selectMonth('all');
-            container.appendChild(allBtn);
-
-            // Add month options
-            getAvailableMonths().forEach(month => {
-                const btn = document.createElement('button');
-                btn.className = `month-btn ${currentMonth === month ? 'active' : ''}`;
-                btn.textContent = `${month}月`;
-                btn.onclick = () => selectMonth(month);
-                container.appendChild(btn);
-            });
-        }
-
-        function selectMonth(month) {
-            currentMonth = month;
-            renderMonthSelector();
-            calculateKPIs();
-            renderSessionTabs();
-            updateChart();
-        }
-
-        function calculateKPIs() {
-            const filteredSessions = getFilteredSessions();
-            const totalDeals = filteredSessions.reduce((sum, s) => sum + s.chartMetrics.deals, 0);
-            const totalViewers = filteredSessions.reduce((sum, s) => sum + s.chartMetrics.viewers, 0);
-            const avgConversion = filteredSessions.length > 0
-                ? (filteredSessions.reduce((sum, s) => sum + s.chartMetrics.conversion, 0) / filteredSessions.length).toFixed(1)
-                : 0;
-            const avgDeals = filteredSessions.length > 0
-                ? (filteredSessions.reduce((sum, s) => sum + s.chartMetrics.deals, 0) / filteredSessions.length).toFixed(1)
-                : 0;
-            const avgViewers = filteredSessions.length > 0
-                ? (filteredSessions.reduce((sum, s) => sum + s.chartMetrics.viewers, 0) / filteredSessions.length).toFixed(0)
-                : 0;
-            const maxConversion = filteredSessions.length > 0
-                ? Math.max(...filteredSessions.map(s => s.chartMetrics.conversion)).toFixed(1)
+            const totalViews = filtered.reduce((sum, s) => sum + s.views, 0);
+            const totalLuckyDraw = filtered.reduce((sum, s) => sum + s.luckyDraw, 0);
+            const totalSales = filtered.reduce((sum, s) => sum + s.sales, 0);
+            const avgConversion = filtered.length > 0
+                ? (filtered.reduce((sum, s) => sum + s.conversion, 0) / filtered.length).toFixed(2)
                 : 0;
 
-            document.getElementById('totalDeals').textContent = totalDeals;
-            document.getElementById('totalViewers').textContent = totalViewers;
-            document.getElementById('avgConversion').textContent = avgConversion;
-            document.getElementById('avgDeals').textContent = avgDeals;
-            document.getElementById('avgViewers').textContent = avgViewers;
-            document.getElementById('maxConversion').textContent = maxConversion;
+            document.getElementById('totalViews').textContent = totalViews;
+            document.getElementById('totalLuckyDraw').textContent = totalLuckyDraw;
+            document.getElementById('totalSales').textContent = totalSales;
+            document.getElementById('avgConversion').textContent = avgConversion + '%';
+
+            // 更新月份标签
+            const monthLabel = document.getElementById('monthLabel');
+            if (currentMonth === 'all') {
+                monthLabel.textContent = '';
+            } else {
+                monthLabel.textContent = `（${currentMonth}月份）`;
+            }
         }
 
-        function renderSessionTabs() {
-            const container = document.getElementById('sessionTabs');
-            container.innerHTML = '';
+        // 更新图表
+        function updateCharts() {
+            const filtered = getFilteredData();
+            const labels = filtered.map(s => s.date.replace('2024.', ''));
 
-            const filteredSessions = getFilteredSessions();
-
-            filteredSessions.forEach((session) => {
-                const index = liveSessions.indexOf(session);
-                const tab = document.createElement('div');
-                tab.className = `session-tab ${index === selectedSessionIndex ? 'active' : ''}`;
-
-                tab.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 6px;">
-                        <div class="session-date">${session.date}</div>
-                        ${session.isHighlight ? '<span class="highlight-badge">🔥</span>' : ''}
-                    </div>
-                    <div class="session-title">${session.title}</div>
-                    <div class="stats-preview">
-                        <span style="font-weight: 600;">📦 ${session.chartMetrics.deals}单</span>
-                        <span>👁 ${session.chartMetrics.viewers}人</span>
-                    </div>
-                    <label class="checkbox-label" style="position: absolute; top: 8px; left: 8px; margin: 0;">
-                        <input type="checkbox"
-                               ${compareSessions.includes(session.id) ? 'checked' : ''}
-                               onclick="event.stopPropagation(); toggleCompareSession('${session.id}')">
-                    </label>
-                `;
-
-                tab.onclick = () => selectSession(index);
-                container.appendChild(tab);
-            });
-        }
-
-        function selectSession(index) {
-            selectedSessionIndex = index;
-            renderSessionTabs();
-            renderDetailContainer(liveSessions[index]);
-        }
-
-        function renderDetailContainer(session) {
-            const container = document.getElementById('detailContainer');
-            container.className = 'module fade-in';
-
-            container.innerHTML = `
-                <div class="session-info-header">${session.date} · ${session.title}</div>
-                <p class="session-core">${session.coreTheme}</p>
-                <div class="detail-grid">
-                    <div class="quantitative-section">
-                        <div class="quantitative-content">
-                            <h3 class="section-title-white">
-                                <span style="font-size:22px;">📈</span>
-                                数据漏斗
-                            </h3>
-                            <div class="funnel-grid">
-                                <div class="funnel-item">
-                                    <div class="funnel-label-row"><span class="funnel-label">🕐 直播时间</span></div>
-                                    <span class="funnel-value">${session.detailData.time}</span>
-                                </div>
-                                <div class="funnel-item">
-                                    <span class="funnel-label"><div class="funnel-label-row"><span class="funnel-label">👁 场观人次</span><span class="metric-def">进入直播间总人数</span></div>
-                                    <span class="funnel-value">${session.detailData.realUV}</span>
-                                </div>
-                                <div class="funnel-item">
-                                    <div class="funnel-label-row"><span class="funnel-label">🎁 福袋人数</span><span class="metric-def">抢福袋/互动人数</span></div>
-                                    <span class="funnel-value">${session.detailData.interaction}</span>
-                                </div>
-                                <div class="funnel-item">
-                                    <div class="funnel-label-row"><span class="funnel-label">📦 成交单数</span><span class="metric-def">进入直播间成交用户量</span></div>
-                                    <span class="funnel-value">${session.detailData.revenue}</span>
-                                </div>
-                                <div class="funnel-item">
-                                    <div class="funnel-label-row"><span class="funnel-label">💹 转化率</span><span class="metric-def">成交单数÷福袋人数</span></div>
-                                    <span class="funnel-value">${session.detailData.conversion}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="qualitative-section">
-                        <div class="review-block highlights">
-                            <div class="review-header">
-                                <span class="review-icon-circle">✅</span>
-                                <span class="review-title">亮点/成功策略</span>
-                            </div>
-                            ${renderReviewList(session.reviewText.highlights)}
-                        </div>
-
-                        <div class="review-block issues">
-                            <div class="review-header">
-                                <span class="review-icon-circle">⚠️</span>
-                                <span class="review-title">不足/问题点</span>
-                            </div>
-                            ${renderReviewList(session.reviewText.issues)}
-                        </div>
-
-                        <div class="review-block actions">
-                            <div class="review-header">
-                                <span class="review-icon-circle">💡</span>
-                                <span class="review-title">迭代/下一步计划</span>
-                            </div>
-                            ${renderReviewList(session.reviewText.actions)}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderReviewList(items) {
-            if (!items || items.length === 0) {
-                return '<div class="empty-state">待复盘</div>';
+            // 销毁旧图表
+            if (conversionChartInstance) {
+                conversionChartInstance.destroy();
+            }
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
             }
 
-            return `
-                <ul class="review-list">
-                    ${items.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            `;
-        }
-
-        function initChart() {
-            const ctx = document.getElementById('trendChart').getContext('2d');
-
-            // 创建渐变填充
-            const gradient = ctx.createLinearGradient(0, 0, 0, 320);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
-            gradient.addColorStop(0.5, 'rgba(59, 130, 246, 0.05)');
-            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.01)');
-
-            // 创建线条渐变
-            const lineGradient = ctx.createLinearGradient(0, 0, 400, 0);
-            lineGradient.addColorStop(0, '#667eea');
-            lineGradient.addColorStop(1, '#764ba2');
-
-            const filteredSessions = getFilteredSessions();
-
-            trendChart = new Chart(ctx, {
+            // 转化率图表
+            const ctx1 = document.getElementById('conversionChart').getContext('2d');
+            conversionChartInstance = new Chart(ctx1, {
                 type: 'line',
                 data: {
-                    labels: filteredSessions.map(s => s.date),
+                    labels: labels,
                     datasets: [{
-                        label: '成交单数',
-                        data: filteredSessions.map(s => s.chartMetrics.deals),
-                        borderColor: lineGradient,
-                        backgroundColor: gradient,
-                        borderWidth: 4,
+                        label: '转化率 (%)',
+                        data: filtered.map(s => s.conversion),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 9,
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: lineGradient,
-                        pointBorderWidth: 4,
-                        pointHoverRadius: 12,
-                        pointHoverBackgroundColor: lineGradient,
-                        pointHoverBorderColor: '#fff',
-                        pointHoverBorderWidth: 3,
-                        pointShadowColor: 'rgba(102, 126, 234, 0.3)',
-                        pointShadowBlur: 8,
-                        pointShadowOffsetX: 0,
-                        pointShadowOffsetY: 2
+                        pointBackgroundColor: '#764ba2',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 1500,
-                        easing: 'easeOutQuart'
-                    },
                     plugins: {
                         legend: {
                             display: false
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(26, 26, 46, 0.98)',
-                            padding: 16,
-                            titleFont: { size: 15, weight: 'bold' },
-                            bodyFont: { size: 14 },
-                            cornerRadius: 12,
-                            displayColors: false,
-                            titleSpacing: 8,
-                            bodySpacing: 8,
-                            callbacks: {
-                                label: function(context) {
-                                    return '数值：' + context.parsed.y;
-                                }
-                            }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: {
-                                color: '#E5E7EB',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                font: { size: 13, weight: '500' },
-                                color: '#6C757D',
-                                padding: 12,
-                                backdropColor: 'transparent'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                font: { size: 13, weight: '600' },
-                                color: '#495057',
-                                padding: 12
-                            }
+                            max: 60
                         }
                     }
                 }
             });
 
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentMetric = this.dataset.metric;
-                    updateChart();
-                });
-            });
-        }
-
-        function updateChart() {
-            const ctx = document.getElementById('trendChart').getContext('2d');
-
-            // 创建渐变填充
-            const gradient = ctx.createLinearGradient(0, 0, 0, 320);
-            gradient.addColorStop(0, 'rgba(102, 126, 234, 0.5)');
-            gradient.addColorStop(0.5, 'rgba(118, 75, 162, 0.2)');
-            gradient.addColorStop(1, 'rgba(118, 75, 162, 0.02)');
-
-            // 创建线条渐变
-            const lineGradient = ctx.createLinearGradient(0, 0, 400, 0);
-            lineGradient.addColorStop(0, '#667eea');
-            lineGradient.addColorStop(1, '#764ba2');
-
-            const filteredSessions = getFilteredSessions();
-            let label, data;
-            switch(currentMetric) {
-                case 'deals':
-                    label = '成交单数';
-                    data = filteredSessions.map(s => s.chartMetrics.deals);
-                    break;
-                case 'viewers':
-                    label = '场观人数';
-                    data = filteredSessions.map(s => s.chartMetrics.viewers);
-                    break;
-                case 'conversion':
-                    label = '转化率 (%)';
-                    data = filteredSessions.map(s => s.chartMetrics.conversion);
-                    break;
-            }
-
-            trendChart.data.labels = filteredSessions.map(s => s.date);
-            trendChart.data.datasets[0].label = label;
-            trendChart.data.datasets[0].data = data;
-            trendChart.data.datasets[0].borderColor = lineGradient;
-            trendChart.data.datasets[0].backgroundColor = gradient;
-            trendChart.update('active');
-        }
-
-        // 筛选功能
-        let compareSessions = [];
-
-        function resetFilters() {
-            document.getElementById('dateStart').value = '';
-            document.getElementById('dateEnd').value = '';
-            document.getElementById('filterDeals').value = 'all';
-            document.getElementById('filterConversion').value = 'all';
-            document.getElementById('filterHighlight').checked = false;
-            currentMonth = 'all';
-            renderMonthSelector();
-            calculateKPIs();
-            renderSessionTabs();
-            updateChart();
-        }
-
-        function getFilteredSessions() {
-            let result = liveSessions;
-
-            // 月份筛选
-            if (currentMonth !== 'all') {
-                result = result.filter(session => {
-                    const monthMatch = session.date.match(/\s*(\d+)\s*月/);
-                    return monthMatch && parseInt(monthMatch[1]) === currentMonth;
-                });
-            }
-
-            // 日期范围筛选
-            const dateStart = document.getElementById('dateStart').value;
-            const dateEnd = document.getElementById('dateEnd').value;
-            if (dateStart || dateEnd) {
-                result = result.filter(session => {
-                    const sessionDate = session.id;
-                    if (dateStart && sessionDate < dateStart) return false;
-                    if (dateEnd && sessionDate > dateEnd) return false;
-                    return true;
-                });
-            }
-
-            // 成交单数筛选
-            const dealsFilter = document.getElementById('filterDeals').value;
-            if (dealsFilter !== 'all') {
-                result = result.filter(session => {
-                    const deals = session.chartMetrics.deals;
-                    if (dealsFilter === 'gt10') return deals > 10;
-                    if (dealsFilter === '5to10') return deals >= 5 && deals <= 10;
-                    if (dealsFilter === 'lt5') return deals < 5;
-                    return true;
-                });
-            }
-
-            // 转化率筛选
-            const conversionFilter = document.getElementById('filterConversion').value;
-            if (conversionFilter !== 'all') {
-                result = result.filter(session => {
-                    const conversion = session.chartMetrics.conversion;
-                    if (conversionFilter === 'gt30') return conversion > 30;
-                    if (conversionFilter === '20to30') return conversion >= 20 && conversion <= 30;
-                    if (conversionFilter === 'lt20') return conversion < 20;
-                    return true;
-                });
-            }
-
-            // 高光场次筛选
-            if (document.getElementById('filterHighlight').checked) {
-                result = result.filter(session => session.isHighlight);
-            }
-
-            return result;
-        }
-
-        // 监听筛选器变化
-        document.addEventListener('DOMContentLoaded', function() {
-            ['dateStart', 'dateEnd', 'filterDeals', 'filterConversion', 'filterHighlight'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('change', function() {
-                        calculateKPIs();
-                        renderSessionTabs();
-                        updateChart();
-                    });
+            // 场观 vs 成交图表
+            const ctx2 = document.getElementById('salesChart').getContext('2d');
+            salesChartInstance = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '场观人数',
+                            data: filtered.map(s => s.views),
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: '成交单数',
+                            data: filtered.map(s => s.sales),
+                            backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
-        });
-
-        // 对比功能
-        function toggleCompareSession(sessionId) {
-            const index = compareSessions.indexOf(sessionId);
-            if (index > -1) {
-                compareSessions.splice(index, 1);
-            } else {
-                compareSessions.push(sessionId);
-            }
-            updateComparePanel();
         }
 
-        function updateComparePanel() {
-            const panel = document.getElementById('comparePanel');
-            const content = document.getElementById('compareContent');
-            const count = document.getElementById('compareCount');
+        // 生成单场卡片
+        function generateSessionCards() {
+            const filtered = getFilteredData();
+            const container = document.getElementById('sessionsContainer');
 
-            if (compareSessions.length === 0) {
-                panel.classList.remove('show');
-                return;
-            }
-
-            count.textContent = compareSessions.length;
-
-            const sessions = liveSessions.filter(s => compareSessions.includes(s.id));
-            const prevSession = sessions.length > 1 ? sessions[sessions.length - 2] : null;
-
-            content.innerHTML = sessions.map((session, index) => {
-                const prevDeals = prevSession ? session.chartMetrics.deals - prevSession.chartMetrics.deals : 0;
-                const diffClass = prevDeals >= 0 ? 'up' : 'down';
-                const diffText = prevDeals >= 0 ? '+' + prevDeals : prevDeals;
-
-                return `
-                    <div class="compare-item">
-                        <div class="compare-item-date">${session.date}</div>
-                        <div class="compare-item-title">${session.title}</div>
-                        <div class="compare-item-value">${session.chartMetrics.deals}单</div>
-                        ${index > 0 ? `<div class="compare-item-diff ${diffClass}">${diffText} 较上场</div>` : ''}
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>该月份暂无直播数据</p>
                     </div>
                 `;
-            }).join('');
-
-            panel.classList.add('show');
-        }
-
-        function closeComparePanel() {
-            compareSessions = [];
-            document.getElementById('comparePanel').classList.remove('show');
-            renderSessionTabs();
-        }
-
-        function showCompareStats() {
-            if (compareSessions.length < 2) {
-                alert('请至少选择 2 个场次进行对比');
                 return;
             }
 
-            const sessions = liveSessions.filter(s => compareSessions.includes(s.id));
-            const totalDeals = sessions.reduce((sum, s) => sum + s.chartMetrics.deals, 0);
-            const avgConversion = (sessions.reduce((sum, s) => sum + s.chartMetrics.conversion, 0) / sessions.length).toFixed(1);
-            const totalViewers = sessions.reduce((sum, s) => sum + s.chartMetrics.viewers, 0);
-
-            alert(`选中 ${sessions.length} 场对比\\n\\n累计成交：${totalDeals} 单\\n平均转化率：${avgConversion}%\\n累计场观：${totalViewers} 人`);
+            container.innerHTML = filtered.map((session, index) => `
+                <div class="session-card">
+                    <div class="session-header">
+                        <div>
+                            <h3>${session.name}</h3>
+                            <div class="date">${session.date} | ${session.duration}</div>
+                        </div>
+                        <span class="session-tag">#${index + 1}</span>
+                    </div>
+                    <div class="data-funnel">
+                        <div class="funnel-item">
+                            <span class="funnel-label">场观人数</span>
+                            <div class="funnel-bar"><div class="funnel-fill" style="width: ${session.views / 72 * 100}%"></div></div>
+                            <span class="funnel-value">${session.views}人</span>
+                        </div>
+                        <div class="funnel-item">
+                            <span class="funnel-label">抢福袋</span>
+                            <div class="funnel-bar"><div class="funnel-fill" style="width: ${session.luckyDraw / 57 * 100}%"></div></div>
+                            <span class="funnel-value">${session.luckyDraw}人</span>
+                        </div>
+                        <div class="funnel-item">
+                            <span class="funnel-label">成交</span>
+                            <div class="funnel-bar"><div class="funnel-fill" style="width: ${session.sales / 20 * 100}%"></div></div>
+                            <span class="funnel-value">${session.sales}单</span>
+                        </div>
+                        <div class="funnel-item">
+                            <span class="funnel-label">转化率</span>
+                            <div class="funnel-bar"><div class="funnel-fill" style="width: ${session.conversion / 60 * 100}%"></div></div>
+                            <span class="funnel-value">${session.conversion}%</span>
+                        </div>
+                        <div class="funnel-item">
+                            <span class="funnel-label">关单率</span>
+                            <div class="funnel-bar"><div class="funnel-fill" style="width: ${session.closeRate / 70 * 100}%"></div></div>
+                            <span class="funnel-value">${session.closeRate}%</span>
+                        </div>
+                    </div>
+                    <div class="session-review">
+                        ${session.highlights.length > 0 ? `
+                            <div class="review-item highlight">
+                                ✅ ${session.highlights.slice(0, 2).join('; ')}
+                            </div>
+                        ` : ''}
+                        ${session.problems.length > 0 ? `
+                            <div class="review-item problem">
+                                ⚠️ ${session.problems.join('; ')}
+                            </div>
+                        ` : ''}
+                        <div class="review-item action">
+                            📋 ${session.actions.slice(0, 1).join('; ')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
-    </script>
 
-    <!-- 对比面板 -->
-    <div class="compare-panel" id="comparePanel">
-        <div class="compare-header">
-            <span class="compare-title">已选择 <span id="compareCount">0</span> 场进行对比</span>
-            <button class="compare-close" onclick="closeComparePanel()">×</button>
-        </div>
-        <div class="compare-grid" id="compareContent">
-        </div>
-        <div class="compare-actions">
-            <button class="btn-primary" onclick="showCompareStats()">查看统计</button>
-        </div>
-    </div>
+        // 切换数据口径说明的展开/折叠
+        function toggleDefinition() {
+            const content = document.getElementById('definitionContent');
+            const icon = document.getElementById('toggleIcon');
+            content.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+        }
+
+        // 切换月份筛选
+        function filterByMonth(month) {
+            currentMonth = month;
+
+            // 更新按钮状态
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.month === month) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 更新数据
+            updateOverview();
+            updateCharts();
+            generateSessionCards();
+        }
+
+        // 导出长图
+        function exportToImage() {
+            const btn = document.querySelector('.export-btn');
+            btn.textContent = '生成中...';
+            btn.disabled = true;
+
+            // 展开数据口径说明以便导出完整内容
+            const content = document.getElementById('definitionContent');
+            const wasCollapsed = content.classList.contains('collapsed');
+            if (wasCollapsed) {
+                toggleDefinition();
+            }
+
+            html2canvas(document.getElementById('content'), {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#f5f7fa',
+                windowWidth: 1200
+            }).then(canvas => {
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `直播复盘汇报_${new Date().toLocaleDateString('zh-CN', {year: 'numeric', month: '2-digit', day: '2-digit'})}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    // 恢复之前的折叠状态
+                    if (wasCollapsed) {
+                        toggleDefinition();
+                    }
+
+                    btn.textContent = '📷 导出长图';
+                    btn.disabled = false;
+                });
+            }).catch(err => {
+                console.error('导出失败:', err);
+                alert('导出失败，请重试');
+
+                // 恢复之前的折叠状态
+                if (wasCollapsed) {
+                    toggleDefinition();
+                }
+
+                btn.textContent = '📷 导出长图';
+                btn.disabled = false;
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定月份筛选事件
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterByMonth(this.dataset.month);
+                });
+            });
+
+            updateOverview();
+            updateCharts();
+            generateSessionCards();
+        });
+    </script>
 </body>
 </html>
