@@ -9,7 +9,7 @@
 const sessions = [
     {
         month: 1,
-        date: '2024.1.31',
+        date: '2026.1.31',
         name: '春节攻势·启动战（首秀）',
         duration: '2 小时',
         views: 72,
@@ -24,7 +24,7 @@ const sessions = [
     },
     {
         month: 2,
-        date: '2024.2.5',
+        date: '2026.2.5',
         name: '口碑发酵·升温战',
         duration: '1.5 小时',
         views: 47,
@@ -39,7 +39,7 @@ const sessions = [
     },
     {
         month: 2,
-        date: '2024.2.8',
+        date: '2026.2.8',
         name: '节前冲刺战',
         duration: '2 小时',
         views: 35,
@@ -54,7 +54,7 @@ const sessions = [
     },
     {
         month: 2,
-        date: '2024.2.12',
+        date: '2026.2.12',
         name: '年前收官战（终局）',
         duration: '3.5 小时',
         views: 68,
@@ -69,7 +69,7 @@ const sessions = [
     },
     {
         month: 2,
-        date: '2024.2.25',
+        date: '2026.2.25',
         name: '开工返场·补录战',
         duration: '1.3 小时',
         views: 12,
@@ -84,7 +84,7 @@ const sessions = [
     },
     {
         month: 2,
-        date: '2024.2.28',
+        date: '2026.2.28',
         name: '合肥达标之战',
         duration: '3.3 小时',
         views: 49,
@@ -99,7 +99,7 @@ const sessions = [
     },
     {
         month: 3,
-        date: '2024.3.2',
+        date: '2026.3.2',
         name: '闹元宵 抢头彩',
         duration: '2 小时',
         views: 29,
@@ -114,7 +114,7 @@ const sessions = [
     },
     {
         month: 3,
-        date: '2024.3.5',
+        date: '2026.3.5',
         name: '女神节专场①',
         duration: '2 小时',
         views: 48,
@@ -129,7 +129,7 @@ const sessions = [
     },
     {
         month: 3,
-        date: '2024.3.7',
+        date: '2026.3.7',
         name: '女神节专场②',
         duration: '2 小时',
         views: 53,
@@ -144,7 +144,7 @@ const sessions = [
     },
     {
         month: 3,
-        date: '2024.3.8',
+        date: '2026.3.8',
         name: '女神节专场③',
         duration: '2 小时',
         views: 44,
@@ -162,7 +162,7 @@ const sessions = [
     // ============================================
     // {
     //     month: 3,                    // 月份（数字）
-    //     date: '2024.3.10',          // 日期（格式：YYYY.M.D）
+    //     date: '2026.3.10',          // 日期（格式：YYYY.M.D）
     //     name: '场次名称',            // 场次名称
     //     duration: '2 小时',          // 直播时长
     //     views: 0,                    // 场观人数
