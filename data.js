@@ -179,4 +179,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20240308';
+const DATA_VERSION = '20260310';
