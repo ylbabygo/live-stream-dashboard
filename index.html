@@ -2254,16 +2254,16 @@
                     <div class="compare-selectors">
                         <div class="month-selectors-container" id="monthSelectors1">
                             <div class="selector-group">
-                                <label>📅 选择第 1 个月</label>
-                                <select class="compare-select month-select">
+                                <label>📅 选择第一个月</label>
+                                <select class="compare-select month1-select">
                                     <option value="1">1 月</option>
                                     <option value="2">2 月</option>
                                     <option value="3">3 月</option>
                                 </select>
                             </div>
                             <div class="selector-group">
-                                <label>📅 选择第 2 个月</label>
-                                <select class="compare-select month-select">
+                                <label>📅 选择第二个月</label>
+                                <select class="compare-select month2-select">
                                     <option value="1">1 月</option>
                                     <option value="2">2 月</option>
                                     <option value="3">3 月</option>
@@ -2806,7 +2806,7 @@
             const container = document.getElementById(`monthSelectors${groupNum}`);
             if (!container) return;
 
-            const existingSelects = container.querySelectorAll('.month-select');
+            const existingSelects = container.querySelectorAll('[class*="month"][class*="-select"]');
             const nextIndex = existingSelects.length + 1;
 
             const newSelectorDiv = document.createElement('div');
@@ -2814,7 +2814,7 @@
             newSelectorDiv.style.marginTop = '10px';
             newSelectorDiv.innerHTML = `
                 <label>📅 选择第${nextIndex}个月</label>
-                <select class="compare-select month-select">
+                <select class="compare-select month${nextIndex}-select">
                     <option value="1">1 月</option>
                     <option value="2">2 月</option>
                     <option value="3">3 月</option>
@@ -3380,8 +3380,18 @@
         // 月对月对比（多组）
         function compareMonthsGroup(groupNum) {
             const group = document.getElementById(`monthGroup${groupNum}`);
-            const month1 = parseInt(group.querySelector('.month1-select').value);
-            const month2 = parseInt(group.querySelector('.month2-select').value);
+            if (!group) return;
+
+            const month1Select = group.querySelector('.month1-select');
+            const month2Select = group.querySelector('.month2-select');
+
+            if (!month1Select || !month2Select) {
+                alert('请选择要对比的月份');
+                return;
+            }
+
+            const month1 = parseInt(month1Select.value);
+            const month2 = parseInt(month2Select.value);
 
             const monthData = groupByMonth();
             const data1 = monthData.find(m => m.month === month1);
