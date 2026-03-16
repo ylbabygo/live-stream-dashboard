@@ -909,6 +909,1029 @@
             max-height: 100% !important;
             max-width: 100% !important;
         }
+
+        /* ============================================
+           智能对比分析中心样式
+           ============================================ */
+        .smart-compare-section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .smart-compare-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .smart-compare-section h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* 对比模式切换 */
+        .compare-mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e8eaf6;
+            padding-bottom: 0;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            padding: 12px 24px;
+            background: #f5f7fa;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .mode-tab:hover {
+            background: #e8eaf6;
+            color: #667eea;
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 对比组标签页 */
+        .compare-group-tabs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .group-tab {
+            padding: 8px 16px;
+            background: #f5f7fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .group-tab:hover {
+            background: #e8eaf6;
+        }
+
+        .group-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .group-tab .remove-btn {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            line-height: 1;
+            transition: all 0.3s;
+        }
+
+        .group-tab .remove-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .add-group-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-group-btn:hover {
+            background: #f0f0ff;
+        }
+
+        /* 对比内容区域 */
+        .compare-content {
+            display: none;
+        }
+
+        .compare-content.active {
+            display: block;
+        }
+
+        /* 对比组内容 */
+        .compare-group-content {
+            display: none;
+        }
+
+        .compare-group-content.active {
+            display: block;
+        }
+
+        /* 对比选择器 */
+        .compare-selectors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff, #fff5ff);
+            border-radius: 12px;
+            align-items: flex-end;
+        }
+
+        .selector-group {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .selector-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .compare-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .compare-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* 周选择器容器布局 */
+        .week-selectors-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex: 1;
+            align-items: flex-end;
+        }
+
+        /* 月选择器容器布局 */
+        .month-selectors-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex: 1;
+            align-items: flex-end;
+        }
+
+        /* 漏斗选择器容器布局 */
+        .funnel-selectors-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex: 1;
+            align-items: flex-end;
+        }
+
+        .compare-btn-primary {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            white-space: nowrap;
+        }
+
+        .compare-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 对比指标卡片 */
+        .compare-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .compare-metric-card {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e8eaf6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compare-metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .compare-metric-card .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .compare-metric-card .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .compare-metric-card .metric-change {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .metric-change.up {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .metric-change.down {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        /* 对比图表网格 */
+        .compare-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .compare-chart-box {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e8eaf6;
+        }
+
+        .compare-chart-box h3 {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compare-chart-box .chart-wrapper {
+            height: 280px;
+            position: relative;
+        }
+
+        /* 漏斗对比 */
+        .funnel-compare-container {
+            display: flex;
+            gap: 30px;
+            justify-content: space-around;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        .funnel-single {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+        }
+
+        .funnel-single h4 {
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .funnel-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .funnel-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .funnel-step-label {
+            width: 80px;
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+        }
+
+        .funnel-step-bar {
+            flex: 1;
+            height: 30px;
+            background: #e8eaf6;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .funnel-step-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* 时段分析卡片 */
+        .time-analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .time-analysis-card {
+            background: white;
+            border: 2px solid #e8eaf6;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .time-analysis-card h4 {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .time-stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .time-stat-label {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .time-stat-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .time-stat-value.best {
+            color: #10b981;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .compare-mode-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .mode-tab {
+                white-space: nowrap;
+            }
+
+            .compare-selectors {
+                flex-direction: column;
+            }
+
+            .selector-group {
+                min-width: 100%;
+            }
+
+            .compare-charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .compare-metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .funnel-compare-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .funnel-single {
+                max-width: 100%;
+            }
+        }
+
+        /* VS 分隔符 */
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #999;
+            padding: 0 15px;
+        }
+
+        .vs-divider::before,
+        .vs-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+        }
+
+        .vs-divider::before {
+            margin-right: 10px;
+        }
+
+        .vs-divider::after {
+            margin-left: 10px;
+        }
+
+        /* ============================================
+           网格 + 翻页场次详情样式
+           ============================================ */
+        .sessions-grid-section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .sessions-grid-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sessions-grid-section h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .sessions-grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .sessions-grid-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sessions-filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .sessions-filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .session-grid-card {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e8eaf6;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .session-grid-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .session-grid-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .session-grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .session-grid-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .session-grid-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .session-grid-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .session-grid-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .session-metric-item {
+            text-align: center;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .session-metric-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .session-metric-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .session-grid-funnel {
+            margin-bottom: 12px;
+        }
+
+        .funnel-mini-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .funnel-mini-label {
+            width: 50px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .funnel-mini-bar {
+            flex: 1;
+            height: 6px;
+            background: #e8eaf6;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .funnel-mini-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+
+        .funnel-mini-value {
+            font-size: 11px;
+            font-weight: 600;
+            color: #667eea;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .session-grid-review {
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+        }
+
+        .review-highlight {
+            color: #10b981;
+            margin-bottom: 5px;
+        }
+
+        .review-problem {
+            color: #f59e0b;
+            margin-bottom: 5px;
+        }
+
+        .review-action {
+            color: #667eea;
+        }
+
+        /* 翻页控件 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination-btn {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #666;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .pagination-pages {
+            display: flex;
+            gap: 5px;
+        }
+
+        .pagination-page {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pagination-page:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .pagination-page.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* 空状态 */
+        .empty-grid-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+
+        .empty-grid-state .icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        /* 响应式网格 */
+        @media (max-width: 768px) {
+            .sessions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sessions-grid-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .sessions-grid-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .sessions-filter-select {
+                flex: 1;
+                min-width: 150px;
+            }
+        }
+
+        /* ============================================
+           数据驾驶舱样式
+           ============================================ */
+        .dashboard-section {
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .dashboard-section h2 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-metric-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .dashboard-metric-card .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-metric-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-metric-card .label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .dashboard-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-chart-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .dashboard-chart-box h3 {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-chart-box .chart-wrapper {
+            height: 200px;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-charts {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-metric-card .value {
+                font-size: 28px;
+            }
+        }
+
+        /* ============================================
+           荣誉榜单样式
+           ============================================ */
+        .honors-section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .honors-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .honors-section h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .honors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .honor-card {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e8eaf6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .honor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .honor-card.gold::before {
+            background: linear-gradient(90deg, #ffd700, #ffb800);
+        }
+
+        .honor-card.silver::before {
+            background: linear-gradient(90deg, #c0c0c0, #a0a0a0);
+        }
+
+        .honor-card.bronze::before {
+            background: linear-gradient(90deg, #cd7f32, #b87333);
+        }
+
+        .honor-card.normal::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .honor-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .honor-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .honor-session {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .honor-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .honor-card.gold .honor-value {
+            color: #ffd700;
+        }
+
+        .honor-card.silver .honor-value {
+            color: #c0c0c0;
+        }
+
+        .honor-card.bronze .honor-value {
+            color: #cd7f32;
+        }
+
+        .honor-card.normal .honor-value {
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -1019,11 +2042,94 @@
             </div>
         </section>
 
-        <!-- 单场详情 -->
-        <section class="sessions-section">
-            <h2>各场次详情（滑动查看）</h2>
-            <div class="sessions-scroll" id="sessionsContainer">
+        <!-- 数据驾驶舱 -->
+        <section class="dashboard-section">
+            <h2>📊 数据驾驶舱</h2>
+            <div class="dashboard-metrics">
+                <div class="dashboard-metric-card">
+                    <div class="icon">👥</div>
+                    <div class="value" id="dashTotalViews">0</div>
+                    <div class="label">总场观人数</div>
+                </div>
+                <div class="dashboard-metric-card">
+                    <div class="icon">🎁</div>
+                    <div class="value" id="dashTotalLuckyDraw">0</div>
+                    <div class="label">总抢福袋人数</div>
+                </div>
+                <div class="dashboard-metric-card">
+                    <div class="icon">🛒</div>
+                    <div class="value" id="dashTotalSales">0</div>
+                    <div class="label">总成交单数</div>
+                </div>
+                <div class="dashboard-metric-card">
+                    <div class="icon">📈</div>
+                    <div class="value" id="dashAvgConversion">0%</div>
+                    <div class="label">平均转化率</div>
+                </div>
+                <div class="dashboard-metric-card">
+                    <div class="icon">🎯</div>
+                    <div class="value" id="dashAvgValidRate">0%</div>
+                    <div class="label">平均有效用户占比</div>
+                </div>
+                <div class="dashboard-metric-card">
+                    <div class="icon">🏆</div>
+                    <div class="value" id="dashTotalSessions">0</div>
+                    <div class="label">直播总场次</div>
+                </div>
+            </div>
+            <div class="dashboard-charts">
+                <div class="dashboard-chart-box">
+                    <h3>📈 场次表现趋势</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="dashboardTrendChart"></canvas>
+                    </div>
+                </div>
+                <div class="dashboard-chart-box">
+                    <h3>🎯 数据分布</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="dashboardDistChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 荣誉榜单 -->
+        <section class="honors-section">
+            <h2>🏆 荣誉榜单</h2>
+            <div class="honors-grid" id="honorsGrid">
                 <!-- 由 JS 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 各场次详情（网格 + 翻页） -->
+        <section class="sessions-grid-section">
+            <h2>📋 各场次详情</h2>
+            <div class="sessions-grid-header">
+                <div class="sessions-grid-controls">
+                    <select class="sessions-filter-select" id="sessionMonthFilter" onchange="filterSessionsByMonth()">
+                        <option value="all">全部月份</option>
+                        <option value="1">1 月</option>
+                        <option value="2">2 月</option>
+                        <option value="3">3 月</option>
+                    </select>
+                    <select class="sessions-filter-select" id="sessionSortFilter" onchange="sortSessions()">
+                        <option value="date">按日期排序</option>
+                        <option value="views">按场观排序</option>
+                        <option value="sales">按成交排序</option>
+                        <option value="conversion">按转化率排序</option>
+                    </select>
+                </div>
+                <div class="pagination-info" id="sessionsPaginationInfo">第 1 页 / 共 1 页</div>
+            </div>
+            <div class="sessions-grid" id="sessionsGrid">
+                <!-- 由 JS 动态生成 -->
+            </div>
+            <div class="pagination" id="sessionsPagination">
+                <button class="pagination-btn" id="prevPageBtn" onclick="prevPage()">⏮ 上一页</button>
+                <div class="pagination-pages" id="paginationPages">
+                    <!-- 由 JS 动态生成页码 -->
+                </div>
+                <button class="pagination-btn" id="nextPageBtn" onclick="nextPage()">下一页 ⏭</button>
             </div>
         </section>
 
@@ -1083,6 +2189,164 @@
             </div>
         </section>
 
+        <!-- 智能对比分析中心 -->
+        <section class="smart-compare-section">
+            <h2>📈 智能对比分析中心</h2>
+
+            <!-- 模式切换 -->
+            <div class="compare-mode-tabs">
+                <button class="mode-tab active" data-mode="week">周对周对比</button>
+                <button class="mode-tab" data-mode="month">月对月对比</button>
+                <button class="mode-tab" data-mode="time">时段分析</button>
+                <button class="mode-tab" data-mode="funnel">漏斗对比</button>
+            </div>
+
+            <!-- 周对周对比 -->
+            <div class="compare-content active" id="weekCompareContent">
+                <!-- 对比组标签页 -->
+                <div class="compare-group-tabs" id="weekGroupTabs">
+                    <button class="group-tab active" data-group="1">
+                        <span>对比组 1</span>
+                    </button>
+                    <button class="add-group-btn" onclick="addCompareGroup('week')">
+                        <span>+ 添加对比组</span>
+                    </button>
+                </div>
+                <!-- 对比组内容 -->
+                <div class="compare-group-content active" id="weekGroup1">
+                    <div class="compare-selectors">
+                        <div class="week-selectors-container" id="weekSelectors1">
+                            <div class="selector-group">
+                                <label>📅 选择第 1 周</label>
+                                <select class="compare-select week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label>📅 选择第 2 周</label>
+                                <select class="compare-select week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="selector-actions" style="display: flex; gap: 10px; align-items: center;">
+                            <button class="compare-btn-primary" onclick="compareWeeksGroup(1)">开始对比</button>
+                            <button class="add-group-btn" onclick="addWeekSelector(1)" style="margin: 0; padding: 12px 20px;">+ 添加对比周</button>
+                        </div>
+                    </div>
+                    <div class="week-compare-result" id="weekResult1"></div>
+                </div>
+            </div>
+
+            <!-- 月对月对比 -->
+            <div class="compare-content" id="monthCompareContent">
+                <!-- 对比组标签页 -->
+                <div class="compare-group-tabs" id="monthGroupTabs">
+                    <button class="group-tab active" data-group="1">
+                        <span>对比组 1</span>
+                    </button>
+                    <button class="add-group-btn" onclick="addCompareGroup('month')">
+                        <span>+ 添加对比组</span>
+                    </button>
+                </div>
+                <!-- 对比组内容 -->
+                <div class="compare-group-content active" id="monthGroup1">
+                    <div class="compare-selectors">
+                        <div class="month-selectors-container" id="monthSelectors1">
+                            <div class="selector-group">
+                                <label>📅 选择第 1 个月</label>
+                                <select class="compare-select month-select">
+                                    <option value="1">1 月</option>
+                                    <option value="2">2 月</option>
+                                    <option value="3">3 月</option>
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label>📅 选择第 2 个月</label>
+                                <select class="compare-select month-select">
+                                    <option value="1">1 月</option>
+                                    <option value="2">2 月</option>
+                                    <option value="3">3 月</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="selector-actions" style="display: flex; gap: 10px; align-items: center;">
+                            <button class="compare-btn-primary" onclick="compareMonthsGroup(1)">开始对比</button>
+                            <button class="add-group-btn" onclick="addMonthSelector(1)" style="margin: 0; padding: 12px 20px;">+ 添加对比月</button>
+                        </div>
+                    </div>
+                    <div class="month-compare-result" id="monthResult1"></div>
+                </div>
+            </div>
+
+            <!-- 时段分析 -->
+            <div class="compare-content" id="timeCompareContent">
+                <div class="time-analysis-grid">
+                    <div class="time-analysis-card">
+                        <h4>📅 工作日 vs 周末</h4>
+                        <div id="weekdayWeekendStats">
+                            <!-- 由 JS 生成 -->
+                        </div>
+                    </div>
+                    <div class="time-analysis-card">
+                        <h4>🕐 时段表现分析</h4>
+                        <div id="timeSlotStats">
+                            <!-- 由 JS 生成 -->
+                        </div>
+                    </div>
+                    <div class="time-analysis-card">
+                        <h4>🎊 节日 vs 平日</h4>
+                        <div id="holidayNormalStats">
+                            <!-- 由 JS 生成 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="compare-chart-box">
+                    <h3>📊 时段趋势图</h3>
+                    <div class="chart-wrapper" style="height: 350px;">
+                        <canvas id="timeSlotChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 漏斗对比 -->
+            <div class="compare-content" id="funnelCompareContent">
+                <!-- 对比组标签页 -->
+                <div class="compare-group-tabs" id="funnelGroupTabs">
+                    <button class="group-tab active" data-group="1">
+                        <span>对比组 1</span>
+                    </button>
+                    <button class="add-group-btn" onclick="addCompareGroup('funnel')">
+                        <span>+ 添加对比组</span>
+                    </button>
+                </div>
+                <!-- 对比组内容 -->
+                <div class="compare-group-content active" id="funnelGroup1">
+                    <div class="compare-selectors">
+                        <div class="week-selectors-container" id="funnelSelectors1">
+                            <div class="selector-group">
+                                <label>📅 选择第 1 周</label>
+                                <select class="compare-select funnel-week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label>📅 选择第 2 周</label>
+                                <select class="compare-select funnel-week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="selector-actions" style="display: flex; gap: 10px; align-items: center;">
+                            <button class="compare-btn-primary" onclick="compareFunnelsGroup(1)">开始对比</button>
+                            <button class="add-group-btn" onclick="addFunnelSelector(1)" style="margin: 0; padding: 12px 20px;">+ 添加对比周</button>
+                        </div>
+                    </div>
+                    <div class="funnel-compare-result" id="funnelResult1"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- 底部总结 -->
         <section class="summary-section">
             <h2>📋 核心策略演进</h2>
@@ -1116,6 +2380,7 @@
         let salesChartInstance = null;
         let multiDimChartInstance = null;
         let radarChartInstance = null;
+        let timeSlotChartInstance = null;
 
         // 当前筛选月份
         let currentMonth = 'all';
@@ -1138,6 +2403,1346 @@
             closeRate: 'rgba(255, 99, 132, 0.8)'
         };
 
+        // 对比组管理
+        const compareGroups = {
+            week: 1,
+            month: 1,
+            funnel: 1
+        };
+
+        // 场次网格分页
+        let currentPage = 1;
+        const pageSize = 6;
+        let filteredSessions = [...sessions];
+
+        // 节日定义（2024 年）
+        const holidays = ['2024.1.31', '2024.2.5', '2024.2.8', '2024.2.12', '2024.2.25', '2024.2.28', '2024.3.2', '2024.3.5', '2024.3.7', '2024.3.8', '2024.3.11', '2024.3.13', '2024.3.14', '2024.3.15'];
+        const festivalDates = ['2024.1.31', '2024.2.12', '2024.2.25', '2024.2.28', '2024.3.2', '2024.3.8', '2024.3.14', '2024.3.15'];
+
+        // ============================================
+        // 智能对比分析中心功能
+        // ============================================
+
+        // 获取日期字符串
+        function parseDate(dateStr) {
+            const parts = dateStr.replace('2024.', '').split('.');
+            return new Date(2024, parseInt(parts[0]) - 1, parseInt(parts[1]));
+        }
+
+        // 获取周数（ISO 周数）
+        function getWeekNumber(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+            const yearStart = new Date(d.getFullYear(), 0, 1);
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // 获取完整周标识（年月 + 周数，按自然周计算，每月独立计数）
+        function getWeekLabel(date) {
+            const d = parseDate(date);
+            const month = d.getMonth() + 1;
+            const year = d.getFullYear();
+            const day = d.getDate();
+
+            // 自然周定义：周一到周日为一个完整周
+            // 每月第 1 周 = 从该月第一个周一开始的那个完整周
+
+            // 先找到当月 1 号是周几
+            const firstDayOfMonth = new Date(year, month - 1, 1);
+            let firstDayOfWeek = firstDayOfMonth.getDay(); // 0=周日，1=周一...6=周六
+
+            // 计算该月第一个周一的日期
+            // 如果 1 号是周日 (0)，则第一个周一是 2 号
+            // 如果 1 号是周一 (1)，则第一个周一是 1 号
+            // 如果 1 号是周二 (2)，则第一个周一是 7 号 (1+7-2+1)
+            let firstMondayDate;
+            if (firstDayOfWeek === 0) {
+                firstMondayDate = 2; // 1 号是周日，第一个周一是 2 号
+            } else if (firstDayOfWeek === 1) {
+                firstMondayDate = 1; // 1 号是周一
+            } else {
+                firstMondayDate = 7 - firstDayOfWeek + 2; // 1 号是周二到周六
+            }
+
+            // 计算该日期在第几周
+            // 如果日期在第一个周一之前，属于上个月的最后一周（这里简化处理为第 0 周）
+            if (day < firstMondayDate) {
+                return `${month}月第 0 周`; // 实际上不会出现在选择器中
+            }
+
+            // 计算周次：(日期 - 第一个周一日期 + 1) / 7 向上取整
+            const weekNum = Math.ceil((day - firstMondayDate + 1) / 7);
+
+            return `${month}月第${weekNum}周`;
+        }
+
+        // 按周分组数据
+        function groupByWeek() {
+            const weeks = {};
+            sessions.forEach(s => {
+                const d = parseDate(s.date);
+                const weekLabel = getWeekLabel(s.date);
+                if (!weeks[weekLabel]) {
+                    weeks[weekLabel] = {
+                        label: weekLabel,
+                        sessions: [],
+                        month: d.getMonth() + 1
+                    };
+                }
+                weeks[weekLabel].sessions.push(s);
+            });
+            return Object.values(weeks).sort((a, b) => {
+                const aDate = parseDate(a.sessions[0].date);
+                const bDate = parseDate(b.sessions[0].date);
+                return aDate - bDate;
+            });
+        }
+
+        // 按月份分组数据
+        function groupByMonth() {
+            const months = {};
+            sessions.forEach(s => {
+                if (!months[s.month]) {
+                    months[s.month] = {
+                        month: s.month,
+                        sessions: []
+                    };
+                }
+                months[s.month].sessions.push(s);
+            });
+            return Object.values(months).sort((a, b) => a.month - b.month);
+        }
+
+        // 计算周数据汇总
+        function calculateWeekSummary(weekData) {
+            const sessions = weekData.sessions;
+            return {
+                views: sessions.reduce((sum, s) => sum + s.views, 0),
+                luckyDraw: sessions.reduce((sum, s) => sum + s.luckyDraw, 0),
+                sales: sessions.reduce((sum, s) => sum + s.sales, 0),
+                avgConversion: sessions.length > 0 ? (sessions.reduce((sum, s) => sum + s.conversion, 0) / sessions.length).toFixed(2) : 0,
+                avgValidRate: sessions.length > 0 ? (sessions.reduce((sum, s) => sum + s.validRate, 0) / sessions.length).toFixed(2) : 0,
+                avgCloseRate: sessions.length > 0 ? (sessions.reduce((sum, s) => sum + s.closeRate, 0) / sessions.length).toFixed(2) : 0,
+                sessionCount: sessions.length
+            };
+        }
+
+        // 计算月份数据汇总
+        function calculateMonthSummary(monthData) {
+            const sessions = monthData.sessions;
+            return {
+                views: sessions.reduce((sum, s) => sum + s.views, 0),
+                luckyDraw: sessions.reduce((sum, s) => sum + s.luckyDraw, 0),
+                sales: sessions.reduce((sum, s) => sum + s.sales, 0),
+                avgConversion: sessions.length > 0 ? (sessions.reduce((sum, s) => sum + s.conversion, 0) / sessions.length).toFixed(2) : 0,
+                avgValidRate: sessions.length > 0 ? (sessions.reduce((sum, s) => sum + s.validRate, 0) / sessions.length).toFixed(2) : 0,
+                avgCloseRate: sessions.length > 0 ? (sessions.reduce((sum, s) => sum + s.closeRate, 0) / sessions.length).toFixed(2) : 0,
+                sessionCount: sessions.length
+            };
+        }
+
+        // 周对周对比
+        function compareWeeks() {
+            const week1Label = document.getElementById('week1Select').value;
+            const week2Label = document.getElementById('week2Select').value;
+
+            if (!week1Label || !week2Label) {
+                alert('请选择要对比的周次');
+                return;
+            }
+
+            const weeks = groupByWeek();
+            const week1 = weeks.find(w => w.label === week1Label);
+            const week2 = weeks.find(w => w.label === week2Label);
+
+            if (!week1 || !week2) {
+                alert('未找到对应的周数据');
+                return;
+            }
+
+            const summary1 = calculateWeekSummary(week1);
+            const summary2 = calculateWeekSummary(week2);
+
+            const resultContainer = document.getElementById('weekCompareResult');
+            resultContainer.innerHTML = generateCompareResult(week1Label, summary1, week2Label, summary2, 'week');
+
+            // 渲染图表
+            setTimeout(() => {
+                renderCompareCharts(week1Label, summary1, week2Label, summary2);
+            }, 100);
+        }
+
+        // 月对月对比
+        function compareMonths() {
+            const month1 = parseInt(document.getElementById('month1Select').value);
+            const month2 = parseInt(document.getElementById('month2Select').value);
+
+            const monthData = groupByMonth();
+            const data1 = monthData.find(m => m.month === month1);
+            const data2 = monthData.find(m => m.month === month2);
+
+            const summary1 = data1 ? calculateMonthSummary(data1) : { views: 0, luckyDraw: 0, sales: 0, avgConversion: 0, sessionCount: 0 };
+            const summary2 = data2 ? calculateMonthSummary(data2) : { views: 0, luckyDraw: 0, sales: 0, avgConversion: 0, sessionCount: 0 };
+
+            const resultContainer = document.getElementById('monthCompareResult');
+            resultContainer.innerHTML = generateCompareResult(`${month1}月`, summary1, `${month2}月`, summary2, 'month');
+
+            // 渲染图表
+            setTimeout(() => {
+                renderCompareCharts(`${month1}月`, summary1, `${month2}月`, summary2);
+            }, 100);
+        }
+
+        // 生成对比结果 HTML
+        function generateCompareResult(label1, summary1, label2, summary2, type) {
+            const calcChange = (val1, val2) => {
+                if (val1 == 0 && val2 == 0) return { text: '0%', class: '' };
+                if (val1 == 0) return { text: '+100%', class: 'up' };
+                const change = ((val2 - val1) / val1 * 100).toFixed(1);
+                const isUp = change > 0;
+                return {
+                    text: (isUp ? '+' : '') + change + '%',
+                    class: isUp ? 'up' : 'down'
+                };
+            };
+
+            const viewsChange = calcChange(summary1.views, summary2.views);
+            const salesChange = calcChange(summary1.sales, summary2.sales);
+            const conversionChange = calcChange(parseFloat(summary1.avgConversion), parseFloat(summary2.avgConversion));
+            const sessionChange = calcChange(summary1.sessionCount, summary2.sessionCount);
+
+            return `
+                <div class="compare-metrics-grid">
+                    <div class="compare-metric-card">
+                        <div class="metric-label">总场观人数</div>
+                        <div class="metric-value">${summary2.views}</div>
+                        <div class="metric-change ${viewsChange.class}">${viewsChange.text}</div>
+                    </div>
+                    <div class="compare-metric-card">
+                        <div class="metric-label">总成交单数</div>
+                        <div class="metric-value">${summary2.sales}</div>
+                        <div class="metric-change ${salesChange.class}">${salesChange.text}</div>
+                    </div>
+                    <div class="compare-metric-card">
+                        <div class="metric-label">平均转化率</div>
+                        <div class="metric-value">${summary2.avgConversion}%</div>
+                        <div class="metric-change ${conversionChange.class}">${conversionChange.text}</div>
+                    </div>
+                    <div class="compare-metric-card">
+                        <div class="metric-label">直播场次</div>
+                        <div class="metric-value">${summary2.sessionCount}</div>
+                        <div class="metric-change ${sessionChange.class}">${sessionChange.text}</div>
+                    </div>
+                </div>
+                <div class="compare-charts-grid">
+                    <div class="compare-chart-box">
+                        <h3>📊 核心数据对比</h3>
+                        <div class="chart-wrapper" style="height: 280px;">
+                            <canvas id="compareBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="compare-chart-box">
+                        <h3>🎯 转化漏斗对比</h3>
+                        <div class="chart-wrapper" style="height: 280px;">
+                            <canvas id="compareLineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 渲染对比图表
+        function renderCompareCharts(label1, summary1, label2, summary2) {
+            // 销毁旧图表
+            const existingBar = Chart.getChart('compareBarChart');
+            const existingLine = Chart.getChart('compareLineChart');
+            if (existingBar) existingBar.destroy();
+            if (existingLine) existingLine.destroy();
+
+            // 柱状图
+            const barCtx = document.getElementById('compareBarChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['场观人数', '抢福袋人数', '成交单数'],
+                    datasets: [
+                        {
+                            label: label1,
+                            data: [summary1.views, summary1.luckyDraw, summary1.sales],
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: label2,
+                            data: [summary2.views, summary2.luckyDraw, summary2.sales],
+                            backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 折线图 - 转化率对比
+            const lineCtx = document.getElementById('compareLineChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['场观→福袋', '福袋→成交', '整体转化'],
+                    datasets: [
+                        {
+                            label: label1,
+                            data: [
+                                ((summary1.luckyDraw / (summary1.views || 1)) * 100).toFixed(1),
+                                ((summary1.sales / (summary1.luckyDraw || 1)) * 100).toFixed(1),
+                                summary1.avgConversion
+                            ],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6
+                        },
+                        {
+                            label: label2,
+                            data: [
+                                ((summary2.luckyDraw / (summary2.views || 1)) * 100).toFixed(1),
+                                ((summary2.sales / (summary2.luckyDraw || 1)) * 100).toFixed(1),
+                                summary2.avgConversion
+                            ],
+                            borderColor: '#f093fb',
+                            backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // 初始化周选择器
+        function initWeekSelectors() {
+            const weeks = groupByWeek();
+            const options = weeks.map(w => {
+                const sessionNames = getWeekSessionNames(w.sessions);
+                return `<option value="${w.label}">${w.label} (${w.sessions.length}场)${sessionNames}</option>`;
+            }).join('');
+
+            // 初始化所有组别的周选择器（使用统一的.week-select 类）
+            document.querySelectorAll('.week-select').forEach(select => {
+                select.innerHTML = options;
+            });
+
+            // 为每个组设置默认选择（前 2 周）
+            document.querySelectorAll('.week-selectors-container').forEach(container => {
+                const selects = container.querySelectorAll('.week-select');
+                if (selects.length >= 1 && weeks.length > 0) {
+                    selects[0].selectedIndex = 0;
+                }
+                if (selects.length >= 2 && weeks.length > 1) {
+                    selects[1].selectedIndex = 1;
+                }
+            });
+        }
+
+        // 添加对比周
+        function addWeekSelector(groupNum) {
+            const container = document.getElementById(`weekSelectors${groupNum}`);
+            if (!container) return;
+
+            const existingSelects = container.querySelectorAll('.week-select');
+            const nextIndex = existingSelects.length + 1;
+
+            const weeks = groupByWeek();
+            const options = weeks.map(w => {
+                const sessionNames = getWeekSessionNames(w.sessions);
+                return `<option value="${w.label}">${w.label} (${w.sessions.length}场)${sessionNames}</option>`;
+            }).join('');
+
+            const newSelectorDiv = document.createElement('div');
+            newSelectorDiv.className = 'selector-group';
+            newSelectorDiv.style.marginTop = '10px';
+            newSelectorDiv.innerHTML = `
+                <label>📅 选择第${nextIndex}周</label>
+                <select class="compare-select week-select">
+                    ${options}
+                </select>
+            `;
+
+            container.appendChild(newSelectorDiv);
+        }
+
+        // 添加对比月
+        function addMonthSelector(groupNum) {
+            const container = document.getElementById(`monthSelectors${groupNum}`);
+            if (!container) return;
+
+            const existingSelects = container.querySelectorAll('.month-select');
+            const nextIndex = existingSelects.length + 1;
+
+            const newSelectorDiv = document.createElement('div');
+            newSelectorDiv.className = 'selector-group';
+            newSelectorDiv.style.marginTop = '10px';
+            newSelectorDiv.innerHTML = `
+                <label>📅 选择第${nextIndex}个月</label>
+                <select class="compare-select month-select">
+                    <option value="1">1 月</option>
+                    <option value="2">2 月</option>
+                    <option value="3">3 月</option>
+                </select>
+            `;
+
+            container.appendChild(newSelectorDiv);
+        }
+
+        // 获取周次场次名称列表（用于选择器显示）
+        function getWeekSessionNames(sessions) {
+            if (sessions.length === 0) return '';
+            if (sessions.length <= 3) {
+                // 3 场及以下显示全称
+                const names = sessions.map(s => s.name.replace(/·.*$/, '').replace(/（.*$/, ''));
+                return ' - ' + names.join('、');
+            } else {
+                // 超过 3 场显示第一个 + 数量
+                const firstName = sessions[0].name.replace(/·.*$/, '').replace(/（.*$/, '');
+                return ` - ${firstName}等${sessions.length}场`;
+            }
+        }
+
+        // 初始化漏斗选择器（N 周对比）
+        function initFunnelSelectors() {
+            const weeks = groupByWeek();
+            const options = weeks.map(w => {
+                const sessionNames = getWeekSessionNames(w.sessions);
+                return `<option value="${w.label}">${w.label} (${w.sessions.length}场)${sessionNames}</option>`;
+            }).join('');
+
+            // 初始化所有组别的漏斗选择器
+            document.querySelectorAll('.funnel-week-select').forEach(select => {
+                select.innerHTML = options;
+            });
+
+            // 为每个组设置默认选择（前 2 周）
+            document.querySelectorAll('.week-selectors-container').forEach(container => {
+                const selects = container.querySelectorAll('.funnel-week-select');
+                if (selects.length >= 1 && weeks.length > 0) {
+                    selects[0].selectedIndex = 0;
+                }
+                if (selects.length >= 2 && weeks.length > 1) {
+                    selects[1].selectedIndex = 1;
+                }
+            });
+        }
+
+        // 添加漏斗对比周选择器
+        function addFunnelSelector(groupNum) {
+            const container = document.getElementById(`funnelSelectors${groupNum}`);
+            if (!container) return;
+
+            const existingSelects = container.querySelectorAll('.funnel-week-select');
+            const nextIndex = existingSelects.length + 1;
+
+            const weeks = groupByWeek();
+            const options = weeks.map(w => {
+                const sessionNames = getWeekSessionNames(w.sessions);
+                return `<option value="${w.label}">${w.label} (${w.sessions.length}场)${sessionNames}</option>`;
+            }).join('');
+
+            const newSelectorDiv = document.createElement('div');
+            newSelectorDiv.className = 'selector-group';
+            newSelectorDiv.style.marginTop = '10px';
+            newSelectorDiv.innerHTML = `
+                <label>📅 选择第${nextIndex}周</label>
+                <select class="compare-select funnel-week-select">
+                    ${options}
+                </select>
+            `;
+
+            container.appendChild(newSelectorDiv);
+        }
+
+        // 漏斗对比（N 周对比）
+        function compareFunnelsGroup(groupNum) {
+            const group = document.getElementById(`funnelGroup${groupNum}`);
+            const funnelSelects = group.querySelectorAll('.funnel-week-select');
+
+            // 收集所有选中的周标签
+            const selectedWeekLabels = [];
+            funnelSelects.forEach(select => {
+                if (select.value) {
+                    selectedWeekLabels.push(select.value);
+                }
+            });
+
+            if (selectedWeekLabels.length < 2) {
+                alert('请至少选择 2 周进行对比');
+                return;
+            }
+
+            const weeks = groupByWeek();
+            const selectedWeeks = [];
+            const foundLabels = [];
+
+            selectedWeekLabels.forEach(label => {
+                const week = weeks.find(w => w.label === label);
+                if (week) {
+                    selectedWeeks.push(week);
+                    foundLabels.push(label);
+                }
+            });
+
+            if (selectedWeeks.length < 2) {
+                alert('未找到对应的周数据');
+                return;
+            }
+
+            // 计算所有选中周的数据汇总
+            const summaries = selectedWeeks.map(w => calculateWeekSummary(w));
+
+            // 生成 N 周漏斗对比结果 HTML
+            const resultContainer = document.getElementById(`funnelResult${groupNum}`);
+            resultContainer.innerHTML = generateMultiFunnelCompareResult(foundLabels, summaries, 'funnel');
+
+            // 渲染图表（使用唯一 ID）
+            setTimeout(() => {
+                const resultDiv = document.getElementById(`funnelResult${groupNum}`);
+                const barCanvas = resultDiv.querySelector('#funnelBarChart');
+                const lineCanvas = resultDiv.querySelector('#funnelLineChart');
+                if (barCanvas) barCanvas.id = `funnelBarChart${groupNum}`;
+                if (lineCanvas) lineCanvas.id = `funnelLineChart${groupNum}`;
+                renderMultiFunnelCharts(foundLabels, summaries, `funnelBarChart${groupNum}`, `funnelLineChart${groupNum}`);
+            }, 100);
+        }
+
+        // 生成漏斗对比 HTML
+        function generateFunnelCompare(s1, s2) {
+            const calcRate = (part, total) => ((part / (total || 1)) * 100).toFixed(1);
+
+            return `
+                <div class="funnel-compare-container">
+                    <div class="funnel-single">
+                        <h4>${s1.date.replace('2024.', '')}<br>${s1.name}</h4>
+                        <div class="funnel-steps">
+                            <div class="funnel-step">
+                                <span class="funnel-step-label">场观</span>
+                                <div class="funnel-step-bar">
+                                    <div class="funnel-step-fill" style="width: 100%">${s1.views}</div>
+                                </div>
+                            </div>
+                            <div class="funnel-step">
+                                <span class="funnel-step-label">抢福袋</span>
+                                <div class="funnel-step-bar">
+                                    <div class="funnel-step-fill" style="width: ${(s1.luckyDraw / s1.views * 100).toFixed(0)}%">${s1.luckyDraw}</div>
+                                </div>
+                            </div>
+                            <div class="funnel-step">
+                                <span class="funnel-step-label">成交</span>
+                                <div class="funnel-step-bar">
+                                    <div class="funnel-step-fill" style="width: ${(s1.sales / s1.views * 100).toFixed(0)}%">${s1.sales}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 12px; color: #666;">
+                            <div>福袋参与率：${calcRate(s1.luckyDraw, s1.views)}%</div>
+                            <div>关单率：${calcRate(s1.sales, s1.luckyDraw)}%</div>
+                            <div>转化率：${s1.conversion}%</div>
+                        </div>
+                    </div>
+                    <div class="funnel-single">
+                        <h4>${s2.date.replace('2024.', '')}<br>${s2.name}</h4>
+                        <div class="funnel-steps">
+                            <div class="funnel-step">
+                                <span class="funnel-step-label">场观</span>
+                                <div class="funnel-step-bar">
+                                    <div class="funnel-step-fill" style="width: 100%">${s2.views}</div>
+                                </div>
+                            </div>
+                            <div class="funnel-step">
+                                <span class="funnel-step-label">抢福袋</span>
+                                <div class="funnel-step-bar">
+                                    <div class="funnel-step-fill" style="width: ${(s2.luckyDraw / s2.views * 100).toFixed(0)}%">${s2.luckyDraw}</div>
+                                </div>
+                            </div>
+                            <div class="funnel-step">
+                                <span class="funnel-step-label">成交</span>
+                                <div class="funnel-step-bar">
+                                    <div class="funnel-step-fill" style="width: ${(s2.sales / s2.views * 100).toFixed(0)}%">${s2.sales}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 12px; color: #666;">
+                            <div>福袋参与率：${calcRate(s2.luckyDraw, s2.views)}%</div>
+                            <div>关单率：${calcRate(s2.sales, s2.luckyDraw)}%</div>
+                            <div>转化率：${s2.conversion}%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // 多组对比功能
+        // ============================================
+
+        // 添加对比组
+        function addCompareGroup(type) {
+            compareGroups[type]++;
+            const groupNum = compareGroups[type];
+            const tabsContainer = document.getElementById(`${type}GroupTabs`);
+            const contentContainer = document.getElementById(`${type}CompareContent`);
+
+            // 创建新的标签按钮
+            const newTab = document.createElement('button');
+            newTab.className = 'group-tab';
+            newTab.dataset.group = groupNum;
+            newTab.innerHTML = `
+                <span>对比组${groupNum}</span>
+                <button class="remove-btn" onclick="removeCompareGroup(event, '${type}', ${groupNum})">×</button>
+            `;
+            newTab.onclick = function(e) {
+                if (!e.target.classList.contains('remove-btn')) {
+                    switchCompareGroup(type, groupNum);
+                }
+            };
+
+            // 插入到添加按钮之前
+            const addBtn = tabsContainer.querySelector('.add-group-btn');
+            tabsContainer.insertBefore(newTab, addBtn);
+
+            // 创建新的内容区域
+            const newGroup = document.createElement('div');
+            newGroup.className = 'compare-group-content';
+            newGroup.id = `${type}Group${groupNum}`;
+
+            if (type === 'week') {
+                newGroup.innerHTML = `
+                    <div class="compare-selectors">
+                        <div class="week-selectors-container" id="weekSelectors${groupNum}">
+                            <div class="selector-group">
+                                <label>📅 选择第 1 周</label>
+                                <select class="compare-select week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label>📅 选择第 2 周</label>
+                                <select class="compare-select week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="selector-actions" style="display: flex; gap: 10px; align-items: center;">
+                            <button class="compare-btn-primary" onclick="compareWeeksGroup(${groupNum})">开始对比</button>
+                            <button class="add-group-btn" onclick="addWeekSelector(${groupNum})" style="margin: 0; padding: 12px 20px;">+ 添加对比周</button>
+                        </div>
+                    </div>
+                    <div class="week-compare-result" id="weekResult${groupNum}"></div>
+                `;
+            } else if (type === 'month') {
+                newGroup.innerHTML = `
+                    <div class="compare-selectors">
+                        <div class="selector-group">
+                            <label>📅 选择第一个月</label>
+                            <select class="compare-select month1-select">
+                                <option value="1">1 月</option>
+                                <option value="2">2 月</option>
+                                <option value="3">3 月</option>
+                            </select>
+                        </div>
+                        <div class="vs-divider">VS</div>
+                        <div class="selector-group">
+                            <label>📅 选择第二个月</label>
+                            <select class="compare-select month2-select">
+                                <option value="1">1 月</option>
+                                <option value="2">2 月</option>
+                                <option value="3">3 月</option>
+                            </select>
+                        </div>
+                        <button class="compare-btn-primary" onclick="compareMonthsGroup(${groupNum})">开始对比</button>
+                    </div>
+                    <div class="month-compare-result" id="monthResult${groupNum}"></div>
+                `;
+            } else if (type === 'funnel') {
+                newGroup.innerHTML = `
+                    <div class="compare-selectors">
+                        <div class="week-selectors-container" id="funnelSelectors${groupNum}">
+                            <div class="selector-group">
+                                <label>📅 选择第 1 周</label>
+                                <select class="compare-select funnel-week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label>📅 选择第 2 周</label>
+                                <select class="compare-select funnel-week-select">
+                                    <!-- 由 JS 生成 -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="selector-actions" style="display: flex; gap: 10px; align-items: center;">
+                            <button class="compare-btn-primary" onclick="compareFunnelsGroup(${groupNum})">开始对比</button>
+                            <button class="add-group-btn" onclick="addFunnelSelector(${groupNum})" style="margin: 0; padding: 12px 20px;">+ 添加对比周</button>
+                        </div>
+                    </div>
+                    <div class="funnel-compare-result" id="funnelResult${groupNum}"></div>
+                `;
+            }
+
+            contentContainer.appendChild(newGroup);
+
+            // 切换到新组
+            switchCompareGroup(type, groupNum);
+        }
+
+        // 删除对比组
+        function removeCompareGroup(event, type, groupNum) {
+            event.stopPropagation();
+            if (compareGroups[type] <= 1) {
+                alert('至少保留一个对比组');
+                return;
+            }
+
+            // 删除标签
+            const tab = document.querySelector(`#${type}GroupTabs .group-tab[data-group="${groupNum}"]`);
+            if (tab) tab.remove();
+
+            // 删除内容
+            const content = document.getElementById(`${type}Group${groupNum}`);
+            if (content) content.remove();
+
+            // 切换到第一个组
+            switchCompareGroup(type, 1);
+            compareGroups[type]--;
+        }
+
+        // 切换对比组
+        function switchCompareGroup(type, groupNum) {
+            // 更新标签激活状态
+            document.querySelectorAll(`#${type}GroupTabs .group-tab`).forEach(tab => {
+                tab.classList.toggle('active', parseInt(tab.dataset.group) === groupNum);
+            });
+
+            // 更新内容显示
+            document.querySelectorAll(`#${type}CompareContent .compare-group-content`).forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${type}Group${groupNum}`).classList.add('active');
+        }
+
+        // 周对周对比（多组）- 支持 N 周对比
+        function compareWeeksGroup(groupNum) {
+            const group = document.getElementById(`weekGroup${groupNum}`);
+            const weekSelects = group.querySelectorAll('.week-select');
+
+            // 收集所有选中的周标签
+            const selectedWeekLabels = [];
+            weekSelects.forEach(select => {
+                if (select.value) {
+                    selectedWeekLabels.push(select.value);
+                }
+            });
+
+            if (selectedWeekLabels.length < 2) {
+                alert('请至少选择 2 周进行对比');
+                return;
+            }
+
+            const weeks = groupByWeek();
+            const selectedWeeks = [];
+            const foundLabels = [];
+
+            selectedWeekLabels.forEach(label => {
+                const week = weeks.find(w => w.label === label);
+                if (week) {
+                    selectedWeeks.push(week);
+                    foundLabels.push(label);
+                }
+            });
+
+            if (selectedWeeks.length < 2) {
+                alert('未找到对应的周数据');
+                return;
+            }
+
+            // 计算所有选中周的数据汇总
+            const summaries = selectedWeeks.map(w => calculateWeekSummary(w));
+
+            // 生成 N 周对比结果 HTML
+            const resultContainer = document.getElementById(`weekResult${groupNum}`);
+            resultContainer.innerHTML = generateMultiWeekCompareResult(foundLabels, summaries, 'week');
+
+            // 渲染图表（使用唯一 ID）
+            setTimeout(() => {
+                const resultDiv = document.getElementById(`weekResult${groupNum}`);
+                const barCanvas = resultDiv.querySelector('#compareBarChart');
+                const lineCanvas = resultDiv.querySelector('#compareLineChart');
+                if (barCanvas) barCanvas.id = `weekBarChart${groupNum}`;
+                if (lineCanvas) lineCanvas.id = `weekLineChart${groupNum}`;
+                renderMultiWeekCharts(foundLabels, summaries, `weekBarChart${groupNum}`, `weekLineChart${groupNum}`);
+            }, 100);
+        }
+
+        // ============================================
+        // N 周对比结果生成函数
+        // ============================================
+
+        // 生成 N 周对比结果 HTML
+        function generateMultiWeekCompareResult(labels, summaries, type) {
+            const baseSummary = summaries[0];
+
+            // 计算变化百分比（相对于第一周）
+            const calcChange = (base, current) => {
+                if (base == 0 && current == 0) return { text: '0%', class: '' };
+                if (base == 0) return { text: '+100%', class: 'up' };
+                const change = ((current - base) / base * 100).toFixed(1);
+                const isUp = change > 0;
+                return {
+                    text: (isUp ? '+' : '') + change + '%',
+                    class: isUp ? 'up' : 'down'
+                };
+            };
+
+            // 生成指标卡片 HTML
+            let metricsHtml = '';
+            const metricKeys = [
+                { key: 'views', label: '总场观人数', isPercent: false },
+                { key: 'sales', label: '总成交单数', isPercent: false },
+                { key: 'avgConversion', label: '平均转化率', isPercent: true },
+                { key: 'sessionCount', label: '直播场次', isPercent: false }
+            ];
+
+            summaries.forEach((summary, idx) => {
+                const changeClass = idx === 0 ? '' : 'style="opacity: 0.7;"';
+                metricsHtml += `
+                    <div class="compare-metric-card" ${changeClass}>
+                        <div class="metric-label">${labels[idx]}</div>
+                        <div class="metric-value">${summary.views}</div>
+                        <div style="font-size: 11px; color: #666; margin-top: 5px;">
+                            成交：${summary.sales} | 转化：${summary.avgConversion}%
+                        </div>
+                        ${idx > 0 ? `
+                            <div class="metric-change ${calcChange(baseSummary.views, summary.views).class}">
+                                场观：${calcChange(baseSummary.views, summary.views).text}
+                            </div>
+                            <div class="metric-change ${calcChange(baseSummary.sales, summary.sales).class}" style="margin-top: 4px;">
+                                成交：${calcChange(baseSummary.sales, summary.sales).text}
+                            </div>
+                        ` : '<div style="font-size: 11px; color: #999; margin-top: 5px;">基准周</div>'}
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="compare-metrics-grid">
+                    ${metricsHtml}
+                </div>
+                <div class="compare-charts-grid">
+                    <div class="compare-chart-box">
+                        <h3>📊 核心数据对比</h3>
+                        <div class="chart-wrapper" style="height: 280px;">
+                            <canvas id="compareBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="compare-chart-box">
+                        <h3>🎯 转化漏斗对比</h3>
+                        <div class="chart-wrapper" style="height: 280px;">
+                            <canvas id="compareLineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 渲染 N 周对比图表
+        function renderMultiWeekCharts(labels, summaries, barId, lineId) {
+            const barCtx = document.getElementById(barId).getContext('2d');
+            const lineCtx = document.getElementById(lineId).getContext('2d');
+
+            // 销毁旧图表
+            const existingBar = Chart.getChart(barId);
+            const existingLine = Chart.getChart(lineId);
+            if (existingBar) existingBar.destroy();
+            if (existingLine) existingLine.destroy();
+
+            // 生成颜色 palette（支持最多 10 周对比）
+            const colorPalette = [
+                { bg: 'rgba(102, 126, 234, 0.8)', border: '#667eea' },
+                { bg: 'rgba(240, 147, 251, 0.8)', border: '#f093fb' },
+                { bg: 'rgba(16, 185, 129, 0.8)', border: '#10b981' },
+                { bg: 'rgba(255, 159, 67, 0.8)', border: '#ff9f41' },
+                { bg: 'rgba(255, 99, 132, 0.8)', border: '#ff6384' },
+                { bg: 'rgba(54, 162, 235, 0.8)', border: '#36a2eb' },
+                { bg: 'rgba(255, 206, 86, 0.8)', border: '#ffce56' },
+                { bg: 'rgba(75, 192, 192, 0.8)', border: '#4bc0c0' },
+                { bg: 'rgba(153, 102, 255, 0.8)', border: '#9966ff' },
+                { bg: 'rgba(255, 159, 64, 0.8)', border: '#ff9f40' }
+            ];
+
+            // 柱状图 - N 周对比
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['场观人数', '抢福袋人数', '成交单数'],
+                    datasets: summaries.map((summary, idx) => {
+                        const color = colorPalette[idx % colorPalette.length];
+                        return {
+                            label: labels[idx],
+                            data: [summary.views, summary.luckyDraw, summary.sales],
+                            backgroundColor: color.bg,
+                            borderRadius: 8
+                        };
+                    })
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 折线图 - 转化率对比
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['场观→福袋', '福袋→成交', '整体转化'],
+                    datasets: summaries.map((summary, idx) => {
+                        const color = colorPalette[idx % colorPalette.length];
+                        return {
+                            label: labels[idx],
+                            data: [
+                                ((summary.luckyDraw / (summary.views || 1)) * 100).toFixed(1),
+                                ((summary.sales / (summary.luckyDraw || 1)) * 100).toFixed(1),
+                                summary.avgConversion
+                            ],
+                            borderColor: color.border,
+                            backgroundColor: color.bg.replace('0.8', '0.1'),
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6
+                        };
+                    })
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // 月对月对比（多组）
+        function compareMonthsGroup(groupNum) {
+            const group = document.getElementById(`monthGroup${groupNum}`);
+            const month1 = parseInt(group.querySelector('.month1-select').value);
+            const month2 = parseInt(group.querySelector('.month2-select').value);
+
+            const monthData = groupByMonth();
+            const data1 = monthData.find(m => m.month === month1);
+            const data2 = monthData.find(m => m.month === month2);
+
+            const summary1 = data1 ? calculateMonthSummary(data1) : { views: 0, luckyDraw: 0, sales: 0, avgConversion: 0, sessionCount: 0 };
+            const summary2 = data2 ? calculateMonthSummary(data2) : { views: 0, luckyDraw: 0, sales: 0, avgConversion: 0, sessionCount: 0 };
+
+            const resultContainer = document.getElementById(`monthResult${groupNum}`);
+            resultContainer.innerHTML = generateCompareResult(`${month1}月`, summary1, `${month2}月`, summary2, 'month');
+
+            setTimeout(() => {
+                const resultDiv = document.getElementById(`monthResult${groupNum}`);
+                const barCanvas = resultDiv.querySelector('#compareBarChart');
+                const lineCanvas = resultDiv.querySelector('#compareLineChart');
+                if (barCanvas) barCanvas.id = `monthBarChart${groupNum}`;
+                if (lineCanvas) lineCanvas.id = `monthLineChart${groupNum}`;
+                renderCompareChartsWithId(`${month1}月`, summary1, `${month2}月`, summary2, `monthBarChart${groupNum}`, `monthLineChart${groupNum}`);
+            }, 100);
+        }
+
+        // ============================================
+        // N 周漏斗对比结果生成函数
+        // ============================================
+
+        // 生成 N 周漏斗对比结果 HTML
+        function generateMultiFunnelCompareResult(labels, summaries, type) {
+            const baseSummary = summaries[0];
+
+            // 计算变化百分比（相对于第一周）
+            const calcChange = (base, current) => {
+                if (base == 0 && current == 0) return { text: '0%', class: '' };
+                if (base == 0) return { text: '+100%', class: 'up' };
+                const change = ((current - base) / base * 100).toFixed(1);
+                const isUp = change > 0;
+                return {
+                    text: (isUp ? '+' : '') + change + '%',
+                    class: isUp ? 'up' : 'down'
+                };
+            };
+
+            // 计算福袋参与率和关单率
+            const calcRate = (part, total) => total > 0 ? ((part / total) * 100).toFixed(1) : '0.0';
+
+            // 生成指标卡片 HTML
+            let metricsHtml = '';
+            summaries.forEach((summary, idx) => {
+                const funnelParticipation = calcRate(summary.luckyDraw, summary.views);
+                const closeRate = calcRate(summary.sales, summary.luckyDraw);
+                const conversionRate = summary.avgConversion;
+
+                metricsHtml += `
+                    <div class="compare-metric-card" style="${idx > 0 ? 'opacity: 0.85;' : ''}">
+                        <div class="metric-label">${labels[idx]}<br><span style="font-size: 11px; color: #999;">${summary.sessionCount}场直播</span></div>
+                        <div class="metric-value" style="font-size: 20px; margin: 10px 0;">${summary.views}</div>
+                        <div style="font-size: 11px; color: #666;">
+                            <div>抢福袋：<strong>${summary.luckyDraw}</strong> | 成交：<strong>${summary.sales}</strong></div>
+                            <div style="margin-top: 4px;">福袋参与率：<span style="color: #10b981;">${funnelParticipation}%</span></div>
+                            <div style="margin-top: 2px;">关单率：<span style="color: #f093fb;">${closeRate}%</span></div>
+                            <div style="margin-top: 2px;">转化率：<span style="color: #667eea;">${conversionRate}%</span></div>
+                        </div>
+                        ${idx > 0 ? `
+                            <div class="metric-change ${calcChange(baseSummary.views, summary.views).class}" style="margin-top: 8px;">
+                                场观：${calcChange(baseSummary.views, summary.views).text}
+                            </div>
+                            <div class="metric-change ${calcChange(baseSummary.sales, summary.sales).class}" style="margin-top: 4px;">
+                                成交：${calcChange(baseSummary.sales, summary.sales).text}
+                            </div>
+                            <div class="metric-change ${calcChange(baseSummary.avgConversion, summary.avgConversion).class}" style="margin-top: 4px;">
+                                转化率：${calcChange(baseSummary.avgConversion, summary.avgConversion).text}
+                            </div>
+                        ` : '<div style="font-size: 11px; color: #999; margin-top: 8px; border-top: 1px dashed #ddd; padding-top: 5px;">📌 基准周</div>'}
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="compare-metrics-grid">
+                    ${metricsHtml}
+                </div>
+                <div class="compare-charts-grid">
+                    <div class="compare-chart-box">
+                        <h3>📊 核心数据对比</h3>
+                        <div class="chart-wrapper" style="height: 280px;">
+                            <canvas id="funnelBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="compare-chart-box">
+                        <h3>🎯 转化漏斗效率对比</h3>
+                        <div class="chart-wrapper" style="height: 280px;">
+                            <canvas id="funnelLineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white;">
+                    <h4 style="margin: 0 0 10px 0;">💡 漏斗洞察</h4>
+                    <div style="font-size: 13px; line-height: 1.6;">
+                        ${generateFunnelInsights(labels, summaries)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 生成漏斗洞察文案
+        function generateFunnelInsights(labels, summaries) {
+            const baseSummary = summaries[0];
+            let insights = [];
+
+            // 找出场观最高的周
+            const maxViewsWeek = summaries.reduce((max, s, idx) => s.views > max.views ? {views: s.views, idx} : max, {views: 0, idx: 0});
+            insights.push(`<strong>📈 流量峰值：</strong>${labels[maxViewsWeek.idx]} 场观最高 (${baseSummary.views}→${maxViewsWeek.views === baseSummary.views ? '持平' : maxViewsWeek.views})`);
+
+            // 找出转化率最高的周
+            const maxConvWeek = summaries.reduce((max, s, idx) => s.avgConversion > max.conv ? {conv: s.avgConversion, idx} : max, {conv: 0, idx: 0});
+            insights.push(`<strong>🎯 转化之王：</strong>${labels[maxConvWeek.idx]} 转化率最高 (${maxConvWeek.conv}%)`);
+
+            // 计算整体趋势
+            if (summaries.length >= 2) {
+                const firstToLast = ((summaries[summaries.length - 1].views - summaries[0].views) / summaries[0].views * 100).toFixed(1);
+                const trend = firstToLast > 0 ? '增长' : firstToLast < 0 ? '下降' : '持平';
+                insights.push(`<strong>📊 流量趋势：</strong>从第 1 周到第${summaries.length}周${trend} (${firstToLast > 0 ? '+' : ''}${firstToLast}%)`);
+            }
+
+            return insights.join(' | ');
+        }
+
+        // 渲染 N 周漏斗对比图表
+        function renderMultiFunnelCharts(labels, summaries, barId, lineId) {
+            const barCtx = document.getElementById(barId).getContext('2d');
+            const lineCtx = document.getElementById(lineId).getContext('2d');
+
+            // 销毁旧图表
+            const existingBar = Chart.getChart(barId);
+            const existingLine = Chart.getChart(lineId);
+            if (existingBar) existingBar.destroy();
+            if (existingLine) existingLine.destroy();
+
+            // 生成颜色 palette（支持最多 10 周对比）
+            const colorPalette = [
+                { bg: 'rgba(102, 126, 234, 0.8)', border: '#667eea' },
+                { bg: 'rgba(240, 147, 251, 0.8)', border: '#f093fb' },
+                { bg: 'rgba(16, 185, 129, 0.8)', border: '#10b981' },
+                { bg: 'rgba(255, 159, 67, 0.8)', border: '#ff9f41' },
+                { bg: 'rgba(255, 99, 132, 0.8)', border: '#ff6384' },
+                { bg: 'rgba(54, 162, 235, 0.8)', border: '#36a2eb' },
+                { bg: 'rgba(255, 206, 86, 0.8)', border: '#ffce56' },
+                { bg: 'rgba(75, 192, 192, 0.8)', border: '#4bc0c0' },
+                { bg: 'rgba(153, 102, 255, 0.8)', border: '#9966ff' },
+                { bg: 'rgba(255, 159, 64, 0.8)', border: '#ff9f40' }
+            ];
+
+            // 柱状图 - N 周漏斗数据对比
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['场观人数', '抢福袋人数', '成交单数'],
+                    datasets: summaries.map((summary, idx) => {
+                        const color = colorPalette[idx % colorPalette.length];
+                        return {
+                            label: labels[idx],
+                            data: [summary.views, summary.luckyDraw, summary.sales],
+                            backgroundColor: color.bg,
+                            borderColor: color.border,
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            barPercentage: 0.8,
+                            categoryPercentage: 0.9
+                        };
+                    })
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 10,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 折线图 - 漏斗转化率对比
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['场观→福袋<br>参与率', '福袋→成交<br>关单率', '场观→成交<br>转化率'],
+                    datasets: summaries.map((summary, idx) => {
+                        const color = colorPalette[idx % colorPalette.length];
+                        const funnelParticipation = ((summary.luckyDraw / (summary.views || 1)) * 100).toFixed(1);
+                        const closeRate = ((summary.sales / (summary.luckyDraw || 1)) * 100).toFixed(1);
+                        const conversionRate = summary.avgConversion;
+
+                        return {
+                            label: labels[idx],
+                            data: [funnelParticipation, closeRate, conversionRate],
+                            borderColor: color.border,
+                            backgroundColor: color.bg.replace('0.8', '0.1'),
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: color.border,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        };
+                    })
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 10,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 使用自定义 ID 渲染对比图表
+        function renderCompareChartsWithId(label1, summary1, label2, summary2, barId, lineId) {
+            const barCtx = document.getElementById(barId).getContext('2d');
+            const lineCtx = document.getElementById(lineId).getContext('2d');
+
+            // 销毁旧图表
+            const existingBar = Chart.getChart(barId);
+            const existingLine = Chart.getChart(lineId);
+            if (existingBar) existingBar.destroy();
+            if (existingLine) existingLine.destroy();
+
+            // 柱状图
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['场观人数', '抢福袋人数', '成交单数'],
+                    datasets: [
+                        {
+                            label: label1,
+                            data: [summary1.views, summary1.luckyDraw, summary1.sales],
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: label2,
+                            data: [summary2.views, summary2.luckyDraw, summary2.sales],
+                            backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // 折线图
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['场观→福袋', '福袋→成交', '整体转化'],
+                    datasets: [
+                        {
+                            label: label1,
+                            data: [
+                                ((summary1.luckyDraw / (summary1.views || 1)) * 100).toFixed(1),
+                                ((summary1.sales / (summary1.luckyDraw || 1)) * 100).toFixed(1),
+                                summary1.avgConversion
+                            ],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6
+                        },
+                        {
+                            label: label2,
+                            data: [
+                                ((summary2.luckyDraw / (summary2.views || 1)) * 100).toFixed(1),
+                                ((summary2.sales / (summary2.luckyDraw || 1)) * 100).toFixed(1),
+                                summary2.avgConversion
+                            ],
+                            borderColor: '#f093fb',
+                            backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
         // 更新头部信息
         function updateHeaderInfo() {
             if (typeof sessions !== 'undefined' && sessions.length > 0) {
@@ -1146,6 +3751,232 @@
                 const totalCount = sessions.length;
                 document.getElementById('headerInfo').textContent = `${firstDate} - ${lastDate} 共 ${totalCount} 场直播实战全记录 · 数据版本：${typeof DATA_VERSION !== 'undefined' ? DATA_VERSION : 'latest'}`;
             }
+        }
+
+        // ============================================
+        // 时段分析功能
+        // ============================================
+
+        // 判断是否是周末
+        function isWeekend(dateStr) {
+            const d = parseDate(dateStr);
+            const day = d.getDay();
+            return day === 0 || day === 6;
+        }
+
+        // 判断是否是节日场
+        function isFestival(dateStr) {
+            return festivalDates.includes(dateStr);
+        }
+
+        // 生成时段分析
+        function generateTimeAnalysis() {
+            // 工作日 vs 周末
+            const weekdaySessions = sessions.filter(s => !isWeekend(s.date));
+            const weekendSessions = sessions.filter(s => isWeekend(s.date));
+
+            const weekdayStats = {
+                count: weekdaySessions.length,
+                avgViews: weekdaySessions.length > 0 ? (weekdaySessions.reduce((sum, s) => sum + s.views, 0) / weekdaySessions.length).toFixed(1) : 0,
+                avgConversion: weekdaySessions.length > 0 ? (weekdaySessions.reduce((sum, s) => sum + s.conversion, 0) / weekdaySessions.length).toFixed(2) : 0,
+                totalSales: weekdaySessions.reduce((sum, s) => sum + s.sales, 0)
+            };
+
+            const weekendStats = {
+                count: weekendSessions.length,
+                avgViews: weekendSessions.length > 0 ? (weekendSessions.reduce((sum, s) => sum + s.views, 0) / weekendSessions.length).toFixed(1) : 0,
+                avgConversion: weekendSessions.length > 0 ? (weekendSessions.reduce((sum, s) => sum + s.conversion, 0) / weekendSessions.length).toFixed(2) : 0,
+                totalSales: weekendSessions.reduce((sum, s) => sum + s.sales, 0)
+            };
+
+            const weekdayWeekendStats = document.getElementById('weekdayWeekendStats');
+            weekdayWeekendStats.innerHTML = `
+                <div class="time-stat-row">
+                    <span class="time-stat-label">工作日场次</span>
+                    <span class="time-stat-value">${weekdayStats.count}场</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">周末场次</span>
+                    <span class="time-stat-value">${weekendStats.count}场</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">工作日均场观</span>
+                    <span class="time-stat-value ${weekdayStats.avgViews > weekendStats.avgViews ? 'best' : ''}">${weekdayStats.avgViews}人</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">周末均场观</span>
+                    <span class="time-stat-value ${weekendStats.avgViews > weekdayStats.avgViews ? 'best' : ''}">${weekendStats.avgViews}人</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">工作日均转化</span>
+                    <span class="time-stat-value ${weekdayStats.avgConversion > weekendStats.avgConversion ? 'best' : ''}">${weekdayStats.avgConversion}%</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">周末均转化</span>
+                    <span class="time-stat-value ${weekendStats.avgConversion > weekdayStats.avgConversion ? 'best' : ''}">${weekendStats.avgConversion}%</span>
+                </div>
+            `;
+
+            // 节日 vs 平日
+            const festivalSessions = sessions.filter(s => isFestival(s.date));
+            const normalSessions = sessions.filter(s => !isFestival(s.date));
+
+            const festivalStats = {
+                count: festivalSessions.length,
+                avgViews: festivalSessions.length > 0 ? (festivalSessions.reduce((sum, s) => sum + s.views, 0) / festivalSessions.length).toFixed(1) : 0,
+                avgConversion: festivalSessions.length > 0 ? (festivalSessions.reduce((sum, s) => sum + s.conversion, 0) / festivalSessions.length).toFixed(2) : 0,
+                totalSales: festivalSessions.reduce((sum, s) => sum + s.sales, 0)
+            };
+
+            const normalStats = {
+                count: normalSessions.length,
+                avgViews: normalSessions.length > 0 ? (normalSessions.reduce((sum, s) => sum + s.views, 0) / normalSessions.length).toFixed(1) : 0,
+                avgConversion: normalSessions.length > 0 ? (normalSessions.reduce((sum, s) => sum + s.conversion, 0) / normalSessions.length).toFixed(2) : 0,
+                totalSales: normalSessions.reduce((sum, s) => sum + s.sales, 0)
+            };
+
+            const holidayNormalStats = document.getElementById('holidayNormalStats');
+            holidayNormalStats.innerHTML = `
+                <div class="time-stat-row">
+                    <span class="time-stat-label">节日场次</span>
+                    <span class="time-stat-value">${festivalStats.count}场</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">平日场次</span>
+                    <span class="time-stat-value">${normalStats.count}场</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">节日均场观</span>
+                    <span class="time-stat-value ${festivalStats.avgViews > normalStats.avgViews ? 'best' : ''}">${festivalStats.avgViews}人</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">平日均场观</span>
+                    <span class="time-stat-value ${normalStats.avgViews > festivalStats.avgViews ? 'best' : ''}">${normalStats.avgViews}人</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">节日均转化</span>
+                    <span class="time-stat-value ${festivalStats.avgConversion > normalStats.avgConversion ? 'best' : ''}">${festivalStats.avgConversion}%</span>
+                </div>
+                <div class="time-stat-row">
+                    <span class="time-stat-label">平日均转化</span>
+                    <span class="time-stat-value ${normalStats.avgConversion > festivalStats.avgConversion ? 'best' : ''}">${normalStats.avgConversion}%</span>
+                </div>
+            `;
+
+            // 时段趋势图
+            renderTimeSlotChart();
+        }
+
+        // 渲染时段趋势图
+        function renderTimeSlotChart() {
+            const ctx = document.getElementById('timeSlotChart').getContext('2d');
+
+            if (timeSlotChartInstance) {
+                timeSlotChartInstance.destroy();
+            }
+
+            // 按日期排序
+            const sortedSessions = [...sessions].sort((a, b) => {
+                const aDate = parseDate(a.date);
+                const bDate = parseDate(b.date);
+                return aDate - bDate;
+            });
+
+            const labels = sortedSessions.map(s => s.date.replace('2024.', ''));
+            const viewsData = sortedSessions.map(s => s.views);
+            const conversionData = sortedSessions.map(s => s.conversion);
+
+            // 标记周末
+            const weekendPoints = sortedSessions.map((s, i) => isWeekend(s.date) ? s.views : null);
+
+            timeSlotChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '场观人数',
+                            data: viewsData,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointBackgroundColor: sortedSessions.map(s => isWeekend(s.date) ? '#f093fb' : '#667eea'),
+                            pointBorderWidth: 2,
+                            pointBorderColor: '#fff'
+                        },
+                        {
+                            label: '转化率 (%)',
+                            data: conversionData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(1);
+                                        if (context.dataset.yAxisID === 'y1') {
+                                            label += '%';
+                                        } else {
+                                            label += '人';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '场观人数'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            max: 60,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            title: {
+                                display: true,
+                                text: '转化率 (%)'
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // 验证密码
@@ -1166,6 +3997,16 @@
                 updateHeaderInfo();
                 // 初始化场次复选框
                 initSessionCheckboxes();
+                // 初始化数据驾驶舱
+                updateDashboard();
+                // 初始化荣誉榜单
+                generateHonors();
+                // 初始化智能对比分析中心
+                setTimeout(() => {
+                    initWeekSelectors();
+                    initFunnelSelectors();
+                    // 不再自动执行对比，由用户手动点击"开始对比"按钮触发
+                }, 300);
             } else {
                 // 密码错误，显示错误提示
                 input.classList.add('error');
@@ -1201,6 +4042,381 @@
             setTimeout(() => {
                 updateMultiDimAnalysis();
             }, 100);
+        }
+
+        // ============================================
+        // 网格场次详情功能
+        // ============================================
+
+        // 渲染场次网格
+        function renderSessionsGrid() {
+            const grid = document.getElementById('sessionsGrid');
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageSessions = filteredSessions.slice(start, end);
+
+            if (pageSessions.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-grid-state">
+                        <div class="icon">📭</div>
+                        <div>暂无数据</div>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = pageSessions.map((s, idx) => {
+                    const realIdx = sessions.findIndex(sess => sess.date === s.date && sess.name === s.name);
+                    return generateSessionCard(s, realIdx);
+                }).join('');
+            }
+
+            // 更新分页信息
+            const totalPages = Math.ceil(filteredSessions.length / pageSize);
+            document.getElementById('sessionsPaginationInfo').textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
+
+            // 更新分页按钮
+            document.getElementById('prevPageBtn').disabled = currentPage === 1;
+            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+
+            // 生成分页页码
+            renderPaginationPages(totalPages);
+        }
+
+        // 生成单场次卡片 HTML
+        function generateSessionCard(s, idx) {
+            const funnelWidth1 = ((s.luckyDraw / s.views) * 100).toFixed(0);
+            const funnelWidth2 = ((s.sales / s.views) * 100).toFixed(0);
+
+            return `
+                <div class="session-grid-card">
+                    <div class="session-grid-header">
+                        <div>
+                            <div class="session-grid-title">${s.name}</div>
+                            <div class="session-grid-date">${s.date.replace('2024.', '')}</div>
+                        </div>
+                        <span class="session-grid-tag">${s.month}月</span>
+                    </div>
+                    <div class="session-grid-metrics">
+                        <div class="session-metric-item">
+                            <div class="session-metric-value">${s.views}</div>
+                            <div class="session-metric-label">场观</div>
+                        </div>
+                        <div class="session-metric-item">
+                            <div class="session-metric-value">${s.sales}</div>
+                            <div class="session-metric-label">成交</div>
+                        </div>
+                        <div class="session-metric-item">
+                            <div class="session-metric-value">${s.conversion}%</div>
+                            <div class="session-metric-label">转化</div>
+                        </div>
+                        <div class="session-metric-item">
+                            <div class="session-metric-value">${s.duration}</div>
+                            <div class="session-metric-label">时长</div>
+                        </div>
+                    </div>
+                    <div class="session-grid-funnel">
+                        <div class="funnel-mini-item">
+                            <span class="funnel-mini-label">场观</span>
+                            <div class="funnel-mini-bar">
+                                <div class="funnel-mini-fill" style="width: 100%"></div>
+                            </div>
+                            <span class="funnel-mini-value">${s.views}</span>
+                        </div>
+                        <div class="funnel-mini-item">
+                            <span class="funnel-mini-label">福袋</span>
+                            <div class="funnel-mini-bar">
+                                <div class="funnel-mini-fill" style="width: ${funnelWidth1}%"></div>
+                            </div>
+                            <span class="funnel-mini-value">${s.luckyDraw}</span>
+                        </div>
+                        <div class="funnel-mini-item">
+                            <span class="funnel-mini-label">成交</span>
+                            <div class="funnel-mini-bar">
+                                <div class="funnel-mini-fill" style="width: ${funnelWidth2}%"></div>
+                            </div>
+                            <span class="funnel-mini-value">${s.sales}</span>
+                        </div>
+                    </div>
+                    <div class="session-grid-review">
+                        ${s.highlights && s.highlights.length > 0 ? `<div class="review-highlight">✨ ${s.highlights[0]}</div>` : ''}
+                        ${s.problems && s.problems.length > 0 ? `<div class="review-problem">⚠️ ${s.problems[0]}</div>` : ''}
+                        ${s.actions && s.actions.length > 0 ? `<div class="review-action">💡 ${s.actions[0]}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 生成分页页码
+        function renderPaginationPages(totalPages) {
+            const container = document.getElementById('paginationPages');
+            let html = '';
+
+            if (totalPages <= 5) {
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                }
+            } else {
+                if (currentPage <= 3) {
+                    for (let i = 1; i <= 3; i++) {
+                        html += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                    }
+                    html += `<span style="padding: 0 5px; color: #999;">...</span>`;
+                    html += `<button class="pagination-page" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+                } else if (currentPage >= totalPages - 2) {
+                    html += `<button class="pagination-page" onclick="goToPage(1)">1</button>`;
+                    html += `<span style="padding: 0 5px; color: #999;">...</span>`;
+                    for (let i = totalPages - 2; i <= totalPages; i++) {
+                        html += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                    }
+                } else {
+                    html += `<button class="pagination-page" onclick="goToPage(1)">1</button>`;
+                    html += `<span style="padding: 0 5px; color: #999;">...</span>`;
+                    for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                        html += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                    }
+                    html += `<span style="padding: 0 5px; color: #999;">...</span>`;
+                    html += `<button class="pagination-page" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+                }
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 翻页
+        function goToPage(page) {
+            currentPage = page;
+            renderSessionsGrid();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderSessionsGrid();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredSessions.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderSessionsGrid();
+            }
+        }
+
+        // 按月份筛选
+        function filterSessionsByMonth() {
+            const month = document.getElementById('sessionMonthFilter').value;
+            if (month === 'all') {
+                filteredSessions = [...sessions];
+            } else {
+                filteredSessions = sessions.filter(s => s.month === parseInt(month));
+            }
+            currentPage = 1;
+            renderSessionsGrid();
+        }
+
+        // 排序
+        function sortSessions() {
+            const sortBy = document.getElementById('sessionSortFilter').value;
+            if (sortBy === 'date') {
+                filteredSessions.sort((a, b) => {
+                    const aDate = parseDate(a.date);
+                    const bDate = parseDate(b.date);
+                    return aDate - bDate;
+                });
+            } else if (sortBy === 'views') {
+                filteredSessions.sort((a, b) => b.views - a.views);
+            } else if (sortBy === 'sales') {
+                filteredSessions.sort((a, b) => b.sales - a.sales);
+            } else if (sortBy === 'conversion') {
+                filteredSessions.sort((a, b) => b.conversion - a.conversion);
+            }
+            renderSessionsGrid();
+        }
+
+        // ============================================
+        // 数据驾驶舱功能
+        // ============================================
+
+        // 更新数据驾驶舱
+        function updateDashboard() {
+            const totalViews = sessions.reduce((sum, s) => sum + s.views, 0);
+            const totalLuckyDraw = sessions.reduce((sum, s) => sum + s.luckyDraw, 0);
+            const totalSales = sessions.reduce((sum, s) => sum + s.sales, 0);
+            const avgConversion = (sessions.reduce((sum, s) => sum + s.conversion, 0) / sessions.length).toFixed(2);
+            const avgValidRate = (sessions.reduce((sum, s) => sum + s.validRate, 0) / sessions.length).toFixed(2);
+
+            document.getElementById('dashTotalViews').textContent = totalViews;
+            document.getElementById('dashTotalLuckyDraw').textContent = totalLuckyDraw;
+            document.getElementById('dashTotalSales').textContent = totalSales;
+            document.getElementById('dashAvgConversion').textContent = avgConversion + '%';
+            document.getElementById('dashAvgValidRate').textContent = avgValidRate + '%';
+            document.getElementById('dashTotalSessions').textContent = sessions.length;
+
+            // 渲染趋势图
+            renderDashboardTrendChart();
+            // 渲染分布图
+            renderDashboardDistChart();
+        }
+
+        // 渲染驾驶舱趋势图
+        function renderDashboardTrendChart() {
+            const ctx = document.getElementById('dashboardTrendChart').getContext('2d');
+            const existingChart = Chart.getChart('dashboardTrendChart');
+            if (existingChart) existingChart.destroy();
+
+            const labels = sessions.map(s => s.date.replace('2024.', ''));
+            const viewsData = sessions.map(s => s.views);
+            const salesData = sessions.map(s => s.sales);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '场观人数',
+                            data: viewsData,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4
+                        },
+                        {
+                            label: '成交单数',
+                            data: salesData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // 渲染驾驶舱分布图
+        function renderDashboardDistChart() {
+            const ctx = document.getElementById('dashboardDistChart').getContext('2d');
+            const existingChart = Chart.getChart('dashboardDistChart');
+            if (existingChart) existingChart.destroy();
+
+            const monthData = groupByMonth();
+            const labels = monthData.map(m => `${m.month}月`);
+            const viewsData = monthData.map(m => m.sessions.reduce((sum, s) => sum + s.views, 0));
+            const salesData = monthData.map(m => m.sessions.reduce((sum, s) => sum + s.sales, 0));
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '场观人数',
+                            data: viewsData,
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: '成交单数',
+                            data: salesData,
+                            backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // 荣誉榜单功能
+        // ============================================
+
+        // 生成荣誉榜单
+        function generateHonors() {
+            const honors = [
+                {
+                    title: '🥇 最高转化率',
+                    session: findBestSession('conversion'),
+                    value: findBestSession('conversion').conversion + '%',
+                    type: 'gold'
+                },
+                {
+                    title: '🏆 最高场观',
+                    session: findBestSession('views'),
+                    value: findBestSession('views').views + '人',
+                    type: 'silver'
+                },
+                {
+                    title: '🎯 最高成交',
+                    session: findBestSession('sales'),
+                    value: findBestSession('sales').sales + '单',
+                    type: 'bronze'
+                },
+                {
+                    title: '⭐ 最高有效用户占比',
+                    session: findBestSession('validRate'),
+                    value: findBestSession('validRate').validRate + '%',
+                    type: 'normal'
+                },
+                {
+                    title: '🔥 最高关单率',
+                    session: findBestSession('closeRate'),
+                    value: findBestSession('closeRate').closeRate + '%',
+                    type: 'normal'
+                },
+                {
+                    title: '🎁 最高福袋参与',
+                    session: findBestSession('luckyDraw'),
+                    value: ((findBestSession('luckyDraw').luckyDraw / findBestSession('luckyDraw').views) * 100).toFixed(1) + '%',
+                    type: 'normal'
+                }
+            ];
+
+            document.getElementById('honorsGrid').innerHTML = honors.map(h => `
+                <div class="honor-card ${h.type}">
+                    <div class="honor-icon">${h.type === 'gold' ? '🏆' : h.type === 'silver' ? '🥈' : h.type === 'bronze' ? '🥉' : '⭐'}</div>
+                    <div class="honor-title">${h.title}</div>
+                    <div class="honor-session">${h.session.date.replace('2024.', '')} ${h.session.name}</div>
+                    <div class="honor-value">${h.value}</div>
+                </div>
+            `).join('');
+        }
+
+        // 查找最佳场次
+        function findBestSession(key) {
+            return sessions.reduce((best, current) => {
+                return current[key] > best[key] ? current : best;
+            }, sessions[0]);
         }
 
         // 全选
@@ -1708,9 +4924,29 @@
                 });
             });
 
+            // 绑定对比模式切换事件
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const mode = this.dataset.mode;
+
+                    // 更新激活状态
+                    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // 切换内容区域
+                    document.querySelectorAll('.compare-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(mode + 'CompareContent').classList.add('active');
+
+                    // 初始化对应功能
+                    if (mode === 'time') {
+                        generateTimeAnalysis();
+                    }
+                });
+            });
+
             updateOverview();
             updateCharts();
-            generateSessionCards();
+            filterSessionsByMonth();
 
             // 注意：sessions 数据来自外部 data.js 文件
             // 多维度分析功能在 verifyPassword 成功后初始化
