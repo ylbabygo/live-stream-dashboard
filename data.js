@@ -171,6 +171,51 @@ const sessions = [
         highlights: ['人数集中在前 30 分钟，蓄能充分'],
         problems: ['直播预热不到位', '课前用户较多，关单延迟'],
         actions: ['本月确立新节奏：周三/五/六/日直播', '预热物料准备充分', '优化前 30 分钟直播设计']
+    },
+    {
+        month: 3,
+        date: '2024.3.13',
+        name: '周五开箱夜',
+        duration: '2 小时',
+        views: 23,
+        luckyDraw: 22,
+        sales: 4,
+        conversion: 17.39,
+        validRate: 95.65,
+        closeRate: 18.18,
+        highlights: ['有效用户占比 95.65% 创新高'],
+        problems: ['周五直播数据低谷', '例子数量较少'],
+        actions: ['后续调整直播时间，周五不进行直播']
+    },
+    {
+        month: 3,
+        date: '2024.3.14',
+        name: '以爱之名',
+        duration: '2 小时',
+        views: 35,
+        luckyDraw: 30,
+        sales: 7,
+        conversion: 20,
+        validRate: 85.71,
+        closeRate: 23.33,
+        highlights: ['数据表现正常'],
+        problems: ['数据较为平庸，缺少爆点'],
+        actions: ['结合热点+给到 CC 团队更吸引的内容', '提高用户进入直播间的吸引力']
+    },
+    {
+        month: 3,
+        date: '2024.3.15',
+        name: '品质大赏',
+        duration: '2.3 小时',
+        views: 56,
+        luckyDraw: 50,
+        sales: 17,
+        conversion: 30.35,
+        validRate: 89.28,
+        closeRate: 34,
+        highlights: ['结合 315 热点打响品牌力', '限时限量逼单策略生效'],
+        problems: [],
+        actions: ['直播时间调整为周四/六/日', '日常直播常态化+特定时间点结合热点']
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -194,4 +239,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20240311';
+const DATA_VERSION = '20240315';
