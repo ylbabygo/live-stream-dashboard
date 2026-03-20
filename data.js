@@ -216,6 +216,21 @@ const sessions = [
         highlights: ['结合 315 热点打响品牌力', '限时限量逼单策略生效'],
         problems: [],
         actions: ['直播时间调整为周四/六/日', '日常直播常态化+特定时间点结合热点']
+    },
+    {
+        month: 3,
+        date: '2024.3.19',
+        name: '拒绝碎片化英语',
+        duration: '2 小时',
+        views: 66,
+        luckyDraw: 51,
+        sales: 9,
+        conversion: 13.63,
+        validRate: 77.27,
+        closeRate: 17.64,
+        highlights: ['直播主题定为固定主题 + 活动主题', '新增报名前 30 名赠送 Max 家族兑换卡', '较往期周中有所提升'],
+        problems: ['需探索用户未报名原因'],
+        actions: ['后续按照主题执行', '进行二次逼单']
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -239,4 +254,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20240315';
+const DATA_VERSION = '20240319';
