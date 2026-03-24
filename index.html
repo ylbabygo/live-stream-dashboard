@@ -765,6 +765,16 @@
             margin-top: 20px;
             max-width: 100%;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* 三模式切换 */
+        .multi-dim-charts.mode-simple {
+            grid-template-columns: 1fr;
+        }
+
+        .multi-dim-charts.mode-focus {
+            grid-template-columns: 1fr;
         }
 
         .multi-dim-chart-container {
@@ -772,8 +782,14 @@
             padding: 20px;
             border-radius: 12px;
             border: 1px solid #e8eaf6;
-            height: 400px;
+            min-height: 400px;
             position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .multi-dim-charts.mode-simple .multi-dim-chart-container,
+        .multi-dim-charts.mode-focus .multi-dim-chart-container {
+            min-height: 350px;
         }
 
         .multi-dim-chart-container h3 {
@@ -798,18 +814,31 @@
         }
 
         /* 数据对比表格 */
+        .compare-table-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
+
         .compare-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 12px;
-            overflow: hidden;
+            table-layout: fixed;
         }
-
-        .compare-table th, .compare-table td {
-            padding: 15px 12px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
+        /* 强制表格语义，避免外部样式干扰导致表头纵向堆叠 */
+        .compare-table thead {
+            display: table-header-group;
+        }
+        .compare-table tbody {
+            display: table-row-group;
+        }
+        .compare-table tr {
+            display: table-row;
+        }
+        .compare-table th,
+        .compare-table td {
+            display: table-cell;
+            vertical-align: middle;
         }
 
         .compare-table th {
@@ -817,6 +846,60 @@
             color: white;
             font-weight: 500;
             font-size: 14px;
+            padding: 15px 12px;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.3);
+            line-height: 1.4;
+        }
+
+        .compare-table thead tr th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        .compare-table thead tr th:last-child {
+            border-top-right-radius: 12px;
+            border-right: none;
+        }
+
+        /* 第一列（指标名称）样式 - 固定宽度 */
+        .compare-table th:first-child {
+            width: 100px;
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .compare-table td:first-child {
+            text-align: left;
+            padding-left: 20px;
+            font-weight: 500;
+            color: #333;
+            background: #fafbff;
+        }
+
+        /* 场次表头样式 - 不换行，横向排列 */
+        .compare-table th.session-header {
+            white-space: normal;
+            vertical-align: middle;
+            min-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .compare-table th small {
+            display: block;
+            margin-top: 6px;
+            opacity: 0.95;
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 数据单元格样式 */
+        .compare-table td {
+            padding: 15px 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
         }
 
         .compare-table tr:hover {
@@ -825,12 +908,6 @@
 
         .compare-table tr:last-child td {
             border-bottom: none;
-        }
-
-        .compare-table .metric-name {
-            text-align: left;
-            font-weight: 500;
-            color: #333;
         }
 
         .compare-table .best-value {
@@ -908,6 +985,90 @@
         #multiDimChart, #radarChart {
             max-height: 100% !important;
             max-width: 100% !important;
+        }
+
+        /* 模式指示器 */
+        .mode-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            border: 1px solid #e8eaf6;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .mode-indicator .mode-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .mode-indicator.mode-complete .mode-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .mode-indicator.mode-simple .mode-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .mode-indicator.mode-focus .mode-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        /* 聚焦模式指标卡片 */
+        .focus-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .focus-metric-card {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e8eaf6;
+            transition: transform 0.3s;
+        }
+
+        .focus-metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .focus-metric-card .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .focus-metric-card .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .focus-metric-card .metric-detail {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* 隐藏元素 */
+        .hide-in-focus {
+            display: none !important;
         }
 
         /* ============================================
@@ -2169,18 +2330,27 @@
                 <button class="compare-btn" onclick="updateMultiDimAnalysis()">开始对比</button>
             </div>
 
+            <!-- 模式指示器 -->
+            <div class="mode-indicator mode-complete" id="modeIndicator">
+                <span class="mode-badge">完整模式</span>
+                <span>已选择 <strong id="selectedCount">3</strong> 场</span>
+            </div>
+
             <!-- 对比结果表格 -->
             <div id="compareTableContainer"></div>
 
+            <!-- 聚焦模式指标卡片（仅在聚焦模式显示） -->
+            <div class="focus-metrics-grid" id="focusMetricsGrid" style="display: none;"></div>
+
             <!-- 多维度图表 -->
-            <div class="multi-dim-charts">
-                <div class="multi-dim-chart-container">
+            <div class="multi-dim-charts" id="multiDimCharts">
+                <div class="multi-dim-chart-container" id="barChartContainer">
                     <h3><span class="icon">📊</span> 场次对比图</h3>
                     <div style="height: 310px; position: relative;">
                         <canvas id="multiDimChart" style="max-height: 100%;"></canvas>
                     </div>
                 </div>
-                <div class="multi-dim-chart-container">
+                <div class="multi-dim-chart-container" id="radarChartContainer">
                     <h3><span class="icon">🎯</span> 五维雷达图</h3>
                     <div class="radar-container" style="height: 310px; position: relative;">
                         <canvas id="radarChart" style="max-height: 100%;"></canvas>
@@ -4475,16 +4645,113 @@
             }
 
             const selectedSessions = selectedIndices.map(i => sessions[i]);
+            const selectedCount = selectedSessions.length;
+
+            // 更新模式指示器
+            updateModeIndicator(selectedCount);
+
             const labels = selectedSessions.map(s => s.date.replace('2024.', '') + ' ' + s.name.substring(0, 4));
 
-            // 更新对比表格
+            // 更新对比表格（带包装器）
             updateCompareTable(selectedSessions);
+
+            // 更新聚焦模式指标卡片
+            updateFocusMetrics(selectedSessions);
 
             // 延迟渲染图表，确保容器尺寸正确
             setTimeout(() => {
                 updateMultiDimChart(labels, selectedSessions, selectedDim, chartType);
                 updateRadarChart(selectedSessions);
             }, 50);
+        }
+
+        // 更新模式指示器
+        function updateModeIndicator(count) {
+            const indicator = document.getElementById('modeIndicator');
+            const badge = indicator.querySelector('.mode-badge');
+            const countSpan = document.getElementById('selectedCount');
+            const chartsContainer = document.getElementById('multiDimCharts');
+            const radarContainer = document.getElementById('radarChartContainer');
+            const barContainer = document.getElementById('barChartContainer');
+            const focusGrid = document.getElementById('focusMetricsGrid');
+
+            countSpan.textContent = count;
+
+            // 移除所有模式类
+            indicator.classList.remove('mode-complete', 'mode-simple', 'mode-focus');
+            chartsContainer.classList.remove('mode-simple', 'mode-focus');
+
+            if (count <= 4) {
+                // 完整模式
+                indicator.classList.add('mode-complete');
+                badge.textContent = '完整模式';
+                chartsContainer.classList.remove('mode-simple', 'mode-focus');
+                if (radarContainer) radarContainer.style.display = 'block';
+                if (barContainer) barContainer.style.display = 'block';
+                if (focusGrid) focusGrid.style.display = 'none';
+            } else if (count <= 8) {
+                // 精简模式
+                indicator.classList.add('mode-simple');
+                badge.textContent = '精简模式';
+                chartsContainer.classList.add('mode-simple');
+                if (radarContainer) radarContainer.style.display = 'block';
+                if (barContainer) barContainer.style.display = 'block';
+                if (focusGrid) focusGrid.style.display = 'none';
+            } else {
+                // 聚焦模式
+                indicator.classList.add('mode-focus');
+                badge.textContent = '聚焦模式';
+                chartsContainer.classList.add('mode-focus');
+                if (radarContainer) radarContainer.style.display = 'none';
+                if (focusGrid) focusGrid.style.display = 'grid';
+            }
+        }
+
+        // 更新聚焦模式指标卡片
+        function updateFocusMetrics(selectedSessions) {
+            const focusGrid = document.getElementById('focusMetricsGrid');
+            if (!focusGrid) return;
+
+            // 计算汇总数据
+            const totalViews = selectedSessions.reduce((sum, s) => sum + s.views, 0);
+            const totalLuckyDraw = selectedSessions.reduce((sum, s) => sum + s.luckyDraw, 0);
+            const totalSales = selectedSessions.reduce((sum, s) => sum + s.sales, 0);
+            const avgConversion = (selectedSessions.reduce((sum, s) => sum + s.conversion, 0) / selectedSessions.length).toFixed(2);
+            const avgValidRate = (selectedSessions.reduce((sum, s) => sum + s.validRate, 0) / selectedSessions.length).toFixed(2);
+            const avgCloseRate = (selectedSessions.reduce((sum, s) => sum + s.closeRate, 0) / selectedSessions.length).toFixed(2);
+
+            focusGrid.innerHTML = `
+                <div class="focus-metric-card">
+                    <div class="metric-label">总场观</div>
+                    <div class="metric-value">${totalViews}</div>
+                    <div class="metric-detail">${selectedSessions.length}场合计</div>
+                </div>
+                <div class="focus-metric-card">
+                    <div class="metric-label">总成交</div>
+                    <div class="metric-value">${totalSales}</div>
+                    <div class="metric-detail">累计单数</div>
+                </div>
+                <div class="focus-metric-card">
+                    <div class="metric-label">平均转化</div>
+                    <div class="metric-value">${avgConversion}%</div>
+                    <div class="metric-detail">场均转化率</div>
+                </div>
+                <div class="focus-metric-card">
+                    <div class="metric-label">有效用户</div>
+                    <div class="metric-value">${avgValidRate}%</div>
+                    <div class="metric-detail">平均占比</div>
+                </div>
+                <div class="focus-metric-card">
+                    <div class="metric-label">关单率</div>
+                    <div class="metric-value">${avgCloseRate}%</div>
+                    <div class="metric-detail">平均关单</div>
+                </div>
+                <div class="focus-metric-card">
+                    <div class="metric-label">福袋参与</div>
+                    <div class="metric-value">${((totalLuckyDraw / totalViews) * 100).toFixed(1)}%</div>
+                    <div class="metric-detail">总参与率</div>
+                </div>
+            `;
         }
 
         // 更新对比表格
@@ -4509,19 +4776,31 @@
                 minValues[m.key] = Math.min(...values);
             });
 
+            const colgroup = '<colgroup><col style="width: 110px;">' 
+                + selectedSessions.map(() => '<col style="width: 160px;">').join('') 
+                + '</colgroup>';
+
+            // 聚焦模式下隐藏表格
+            if (selectedSessions.length > 8) {
+                container.innerHTML = '';
+                return;
+            }
+
             let html = `
-                <table class="compare-table">
-                    <thead>
-                        <tr>
-                            <th class="metric-name">指标</th>
-                            ${selectedSessions.map(s => `<th>${s.date.replace('2024.', '')}<br><small>${s.name.substring(0, 10)}${s.name.length > 10 ? '...' : ''}</small></th>`).join('')}
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="compare-table-wrapper">
+                    <table class="compare-table">
+                        ${colgroup}
+                        <thead>
+                            <tr>
+                                <th>指标</th>
+                                ${selectedSessions.map(s => `<th class="session-header">${s.date.replace('2024.', '')}<br><small>${s.name}</small></th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
 
             metrics.forEach(m => {
-                html += `<tr><td class="metric-name">${m.label}</td>`;
+                html += `<tr><td>${m.label}</td>`;
                 selectedSessions.forEach(s => {
                     const value = s[m.key];
                     let className = '';
@@ -4535,7 +4814,7 @@
                 html += `</tr>`;
             });
 
-            html += `</tbody></table>`;
+            html += `</tbody></table></div>`;
             container.innerHTML = html;
         }
 
@@ -4590,6 +4869,15 @@
         // 更新雷达图
         function updateRadarChart(selectedSessions) {
             const ctx = document.getElementById('radarChart').getContext('2d');
+            const selectedCount = selectedSessions.length;
+
+            // 聚焦模式下不渲染雷达图
+            if (selectedCount > 8) {
+                if (radarChartInstance) {
+                    radarChartInstance.destroy();
+                }
+                return;
+            }
 
             // 销毁旧图表
             if (radarChartInstance) {
@@ -4621,6 +4909,10 @@
                 pointRadius: 4
             }));
 
+            // 根据选择数量决定图例位置
+            const legendPosition = selectedCount > 4 ? 'top' : 'bottom';
+            const legendLines = Math.ceil(selectedCount / 3);
+
             radarChartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
@@ -4642,7 +4934,7 @@
                     },
                     plugins: {
                         legend: {
-                            position: 'bottom',
+                            position: legendPosition,
                             labels: {
                                 boxWidth: 12,
                                 padding: 10,
