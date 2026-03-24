@@ -2537,6 +2537,10 @@
                     <h4>3.2-3.8 稳定产出期</h4>
                     <p>开学季 + 节日营销双驱动，转化率稳定在 25%-40%，形成可复制的 SOP</p>
                 </div>
+                <div class="timeline-item">
+                    <h4>3.19 起 双轨运营期</h4>
+                    <p>形成「常规直播 + 活动直播」双轨：常规直播固定主题与时段、SOP固化与二次逼单；活动直播围绕节日/热点策划，视觉与互动加码，限时限量与福利驱动峰值。</p>
+                </div>
             </div>
         </section>
     </div>
@@ -2585,9 +2589,16 @@
         const pageSize = 6;
         let filteredSessions = [...sessions];
 
-        // 节日定义（2024 年）
-        const holidays = ['2024.1.31', '2024.2.5', '2024.2.8', '2024.2.12', '2024.2.25', '2024.2.28', '2024.3.2', '2024.3.5', '2024.3.7', '2024.3.8', '2024.3.11', '2024.3.13', '2024.3.14', '2024.3.15'];
-        const festivalDates = ['2024.1.31', '2024.2.12', '2024.2.25', '2024.2.28', '2024.3.2', '2024.3.8', '2024.3.14', '2024.3.15'];
+        const DATA_YEAR = (() => {
+            const first = sessions && sessions.length > 0 ? sessions[0].date : '';
+            const maybeYear = parseInt(String(first).split('.')[0]);
+            return Number.isFinite(maybeYear) ? maybeYear : new Date().getFullYear();
+        })();
+
+        const holidays = ['2024.1.31', '2024.2.5', '2024.2.8', '2024.2.12', '2024.2.25', '2024.2.28', '2024.3.2', '2024.3.5', '2024.3.7', '2024.3.8', '2024.3.11', '2024.3.13', '2024.3.14', '2024.3.15']
+            .map(d => d.replace(/^\d{4}\./, `${DATA_YEAR}.`));
+        const festivalDates = ['2024.1.31', '2024.2.12', '2024.2.25', '2024.2.28', '2024.3.2', '2024.3.8', '2024.3.14', '2024.3.15']
+            .map(d => d.replace(/^\d{4}\./, `${DATA_YEAR}.`));
 
         // ============================================
         // 智能对比分析中心功能
@@ -2595,8 +2606,16 @@
 
         // 获取日期字符串
         function parseDate(dateStr) {
-            const parts = dateStr.replace('2024.', '').split('.');
-            return new Date(2024, parseInt(parts[0]) - 1, parseInt(parts[1]));
+            const rawParts = String(dateStr).split('.').map(s => parseInt(s, 10));
+            if (rawParts.length >= 3 && rawParts.every(n => Number.isFinite(n))) {
+                const [year, month, day] = rawParts;
+                return new Date(year, month - 1, day);
+            }
+            if (rawParts.length === 2 && rawParts.every(n => Number.isFinite(n))) {
+                const [month, day] = rawParts;
+                return new Date(DATA_YEAR, month - 1, day);
+            }
+            return new Date(NaN);
         }
 
         // 获取周数（ISO 周数）
@@ -5168,6 +5187,11 @@
 
         // 导出长图
         function exportToImage() {
+            if (location.protocol === 'file:') {
+                alert('检测到你正在以 file:// 方式打开页面。浏览器会对 file:// 启用更严格的跨域隔离，可能导致导出与部分功能报错。\n\n请用本地服务器方式打开：\n1）在项目目录打开终端\n2）运行：python -m http.server 8000\n3）访问：http://localhost:8000/直播复盘汇报.html\n\n再重试导出。');
+                return;
+            }
+
             const btn = document.querySelector('.export-btn');
             btn.textContent = '生成中...';
             btn.disabled = true;
