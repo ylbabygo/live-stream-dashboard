@@ -231,6 +231,36 @@ const sessions = [
         highlights: ['直播主题定为固定主题 + 活动主题', '新增报名前 30 名赠送 Max 家族兑换卡', '较往期周中有所提升'],
         problems: ['需探索用户未报名原因'],
         actions: ['后续按照主题执行', '进行二次逼单']
+    },
+    {
+        month: 3,
+        date: '2026.3.21',
+        name: '数据漏斗',
+        duration: '2 小时 (19:00-21:20)',
+        views: 30,
+        luckyDraw: 29,
+        sales: 9,
+        conversion: 30,
+        validRate: 96.6,
+        closeRate: 31.03,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 3,
+        date: '2026.3.22',
+        name: '数据漏斗',
+        duration: '2 小时 (19:00-21:20)',
+        views: 18,
+        luckyDraw: 14,
+        sales: 5,
+        conversion: 27.78,
+        validRate: 77.77,
+        closeRate: 35.71,
+        highlights: [],
+        problems: [],
+        actions: []
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -254,4 +284,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20260319';
+const DATA_VERSION = '20260322';
