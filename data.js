@@ -261,6 +261,66 @@ const sessions = [
         highlights: [],
         problems: [],
         actions: []
+    },
+    {
+        month: 3,
+        date: '2026.3.25',
+        name: '常规直播',
+        duration: '1小时30分钟 (19:00-20:30)',
+        views: 30,
+        luckyDraw: 26,
+        sales: 8,
+        conversion: 26.66,
+        validRate: 86.66,
+        closeRate: 30.76,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 3,
+        date: '2026.3.27',
+        name: '常规直播',
+        duration: '1小时30分钟 (19:00-20:30)',
+        views: 19,
+        luckyDraw: 18,
+        sales: 8,
+        conversion: 42.1,
+        validRate: 94.73,
+        closeRate: 44.4,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 3,
+        date: '2026.3.28',
+        name: '常规直播',
+        duration: '1小时30分钟 (19:00-20:30)',
+        views: 16,
+        luckyDraw: 15,
+        sales: 5,
+        conversion: 31.25,
+        validRate: 93.75,
+        closeRate: 33.33,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 3,
+        date: '2026.3.29',
+        name: '常规直播',
+        duration: '1小时30分钟 (19:00-20:30)',
+        views: 18,
+        luckyDraw: 18,
+        sales: 6,
+        conversion: 33.3,
+        validRate: 100,
+        closeRate: 33.3,
+        highlights: [],
+        problems: [],
+        actions: []
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -284,4 +344,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20260322';
+const DATA_VERSION = '20260329';
