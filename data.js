@@ -321,6 +321,21 @@ const sessions = [
         highlights: [],
         problems: [],
         actions: []
+    },
+    {
+        month: 3,
+        date: '2026.3.31',
+        name: '3月优惠倒计时',
+        duration: '2 小时 (19:00-21:20)',
+        views: 24,
+        luckyDraw: 22,
+        sales: 7,
+        conversion: 29.16,
+        validRate: 91.6,
+        closeRate: 31.82,
+        highlights: ['月底优惠倒计时策略'],
+        problems: ['结合近期直播频次与数据量，场观人数出现下滑'],
+        actions: []
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -344,4 +359,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20260329';
+const DATA_VERSION = '20260331';
