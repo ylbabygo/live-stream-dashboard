@@ -2123,6 +2123,7 @@
             <button class="filter-btn" data-month="1">1 月</button>
             <button class="filter-btn" data-month="2">2 月</button>
             <button class="filter-btn" data-month="3">3 月</button>
+            <button class="filter-btn" data-month="4">4 月</button>
         </section>
 
         <!-- 数据口径说明 -->
@@ -2157,48 +2158,6 @@
                         <div>成交人数占抢福袋人数的比例</div>
                         <div class="formula"><code>成交人数 ÷ 抢福袋人数 × 100%</code></div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 数据概览 -->
-        <section class="overview-section">
-            <h2>核心数据概览 <span class="month-label" id="monthLabel"></span></h2>
-            <div class="overview-grid">
-                <div class="overview-card">
-                    <div class="icon">👥</div>
-                    <div class="value" id="totalViews">460</div>
-                    <div class="label">总场观人数</div>
-                </div>
-                <div class="overview-card">
-                    <div class="icon">🎁</div>
-                    <div class="value" id="totalLuckyDraw">355</div>
-                    <div class="label">总抢福袋人数</div>
-                </div>
-                <div class="overview-card">
-                    <div class="icon">💰</div>
-                    <div class="value" id="totalSales">108</div>
-                    <div class="label">总成交单数</div>
-                </div>
-                <div class="overview-card">
-                    <div class="icon">📈</div>
-                    <div class="value" id="avgConversion">26.5%</div>
-                    <div class="label">平均转化率</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 图表区域 -->
-        <section class="charts-section">
-            <h2>数据趋势分析</h2>
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <h3>📊 转化率走势</h3>
-                    <canvas id="conversionChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>📈 场观 vs 成交对比</h3>
-                    <canvas id="salesChart"></canvas>
                 </div>
             </div>
         </section>
@@ -2254,6 +2213,21 @@
             </div>
         </section>
 
+        <!-- 图表区域 -->
+        <section class="charts-section">
+            <h2>数据趋势分析</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>📊 转化率走势</h3>
+                    <canvas id="conversionChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📈 场观 vs 成交对比</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
         <!-- 荣誉榜单 -->
         <section class="honors-section">
             <h2>🏆 荣誉榜单</h2>
@@ -2272,6 +2246,7 @@
                         <option value="1">1 月</option>
                         <option value="2">2 月</option>
                         <option value="3">3 月</option>
+                        <option value="4">4 月</option>
                     </select>
                     <select class="sessions-filter-select" id="sessionSortFilter" onchange="sortSessions()">
                         <option value="date">按日期排序</option>
@@ -2692,6 +2667,21 @@
         function groupByMonth() {
             const months = {};
             sessions.forEach(s => {
+                if (!months[s.month]) {
+                    months[s.month] = {
+                        month: s.month,
+                        sessions: []
+                    };
+                }
+                months[s.month].sessions.push(s);
+            });
+            return Object.values(months).sort((a, b) => a.month - b.month);
+        }
+
+        // 按月份分组数据（使用传入的sessions）
+        function groupByMonthForSessions(sessionsData) {
+            const months = {};
+            sessionsData.forEach(s => {
                 if (!months[s.month]) {
                     months[s.month] = {
                         month: s.month,
@@ -4438,34 +4428,44 @@
 
         // 更新数据驾驶舱
         function updateDashboard() {
-            const totalViews = sessions.reduce((sum, s) => sum + s.views, 0);
-            const totalLuckyDraw = sessions.reduce((sum, s) => sum + s.luckyDraw, 0);
-            const totalSales = sessions.reduce((sum, s) => sum + s.sales, 0);
-            const avgConversion = (sessions.reduce((sum, s) => sum + s.conversion, 0) / sessions.length).toFixed(2);
-            const avgValidRate = (sessions.reduce((sum, s) => sum + s.validRate, 0) / sessions.length).toFixed(2);
+            // 根据当前月份筛选数据
+            let displaySessions = sessions;
+            if (currentMonth !== 'all') {
+                displaySessions = sessions.filter(s => s.month === parseInt(currentMonth));
+            }
+
+            const totalViews = displaySessions.reduce((sum, s) => sum + s.views, 0);
+            const totalLuckyDraw = displaySessions.reduce((sum, s) => sum + s.luckyDraw, 0);
+            const totalSales = displaySessions.reduce((sum, s) => sum + s.sales, 0);
+            const avgConversion = displaySessions.length > 0
+                ? (displaySessions.reduce((sum, s) => sum + s.conversion, 0) / displaySessions.length).toFixed(2)
+                : '0.00';
+            const avgValidRate = displaySessions.length > 0
+                ? (displaySessions.reduce((sum, s) => sum + s.validRate, 0) / displaySessions.length).toFixed(2)
+                : '0.00';
 
             document.getElementById('dashTotalViews').textContent = totalViews;
             document.getElementById('dashTotalLuckyDraw').textContent = totalLuckyDraw;
             document.getElementById('dashTotalSales').textContent = totalSales;
             document.getElementById('dashAvgConversion').textContent = avgConversion + '%';
             document.getElementById('dashAvgValidRate').textContent = avgValidRate + '%';
-            document.getElementById('dashTotalSessions').textContent = sessions.length;
+            document.getElementById('dashTotalSessions').textContent = displaySessions.length;
 
             // 渲染趋势图
-            renderDashboardTrendChart();
+            renderDashboardTrendChart(displaySessions);
             // 渲染分布图
-            renderDashboardDistChart();
+            renderDashboardDistChart(displaySessions);
         }
 
         // 渲染驾驶舱趋势图
-        function renderDashboardTrendChart() {
+        function renderDashboardTrendChart(displaySessions = sessions) {
             const ctx = document.getElementById('dashboardTrendChart').getContext('2d');
             const existingChart = Chart.getChart('dashboardTrendChart');
             if (existingChart) existingChart.destroy();
 
-            const labels = sessions.map(s => s.date.replace('2024.', ''));
-            const viewsData = sessions.map(s => s.views);
-            const salesData = sessions.map(s => s.sales);
+            const labels = displaySessions.map(s => s.date.replace('2024.', ''));
+            const viewsData = displaySessions.map(s => s.views);
+            const salesData = displaySessions.map(s => s.sales);
 
             new Chart(ctx, {
                 type: 'line',
@@ -4510,12 +4510,12 @@
         }
 
         // 渲染驾驶舱分布图
-        function renderDashboardDistChart() {
+        function renderDashboardDistChart(displaySessions = sessions) {
             const ctx = document.getElementById('dashboardDistChart').getContext('2d');
             const existingChart = Chart.getChart('dashboardDistChart');
             if (existingChart) existingChart.destroy();
 
-            const monthData = groupByMonth();
+            const monthData = groupByMonthForSessions(displaySessions);
             const labels = monthData.map(m => `${m.month}月`);
             const viewsData = monthData.map(m => m.sessions.reduce((sum, s) => sum + s.views, 0));
             const salesData = monthData.map(m => m.sessions.reduce((sum, s) => sum + s.sales, 0));
@@ -4982,26 +4982,7 @@
         // 更新数据概览
         function updateOverview() {
             const filtered = getFilteredData();
-
-            const totalViews = filtered.reduce((sum, s) => sum + s.views, 0);
-            const totalLuckyDraw = filtered.reduce((sum, s) => sum + s.luckyDraw, 0);
-            const totalSales = filtered.reduce((sum, s) => sum + s.sales, 0);
-            const avgConversion = filtered.length > 0
-                ? (filtered.reduce((sum, s) => sum + s.conversion, 0) / filtered.length).toFixed(2)
-                : 0;
-
-            document.getElementById('totalViews').textContent = totalViews;
-            document.getElementById('totalLuckyDraw').textContent = totalLuckyDraw;
-            document.getElementById('totalSales').textContent = totalSales;
-            document.getElementById('avgConversion').textContent = avgConversion + '%';
-
-            // 更新月份标签
-            const monthLabel = document.getElementById('monthLabel');
-            if (currentMonth === 'all') {
-                monthLabel.textContent = '';
-            } else {
-                monthLabel.textContent = `（${currentMonth}月份）`;
-            }
+            // 注意：核心数据概览部分已被删除，此处函数保留以避免调用错误
         }
 
         // 更新图表
@@ -5180,9 +5161,12 @@
             });
 
             // 更新数据
-            updateOverview();
             updateCharts();
-            generateSessionCards();
+            // 更新各场次详情部分的月份筛选
+            document.getElementById('sessionMonthFilter').value = month;
+            filterSessionsByMonth();
+            // 更新数据驾驶舱
+            updateDashboard();
         }
 
         // 导出长图
@@ -5270,9 +5254,10 @@
                 });
             });
 
-            updateOverview();
+            // 初始化数据
             updateCharts();
             filterSessionsByMonth();
+            updateDashboard();
 
             // 注意：sessions 数据来自外部 data.js 文件
             // 多维度分析功能在 verifyPassword 成功后初始化
