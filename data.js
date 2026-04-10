@@ -336,6 +336,36 @@ const sessions = [
         highlights: ['月底优惠倒计时策略'],
         problems: ['结合近期直播频次与数据量，场观人数出现下滑'],
         actions: []
+    },
+    {
+        month: 4,
+        date: '2026.4.6',
+        name: '点亮孩子英语自信心',
+        duration: '2 小时 (19:00-21:20)',
+        views: 39,
+        luckyDraw: 30,
+        sales: 11,
+        conversion: 28.2,
+        validRate: 76.92,
+        closeRate: 36.6,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 4,
+        date: '2026.4.8',
+        name: '点亮孩子英语自信心',
+        duration: '2 小时 (19:00-21:20)',
+        views: 24,
+        luckyDraw: 20,
+        sales: 7,
+        conversion: 29.16,
+        validRate: 83.33,
+        closeRate: 35,
+        highlights: [],
+        problems: [],
+        actions: []
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -359,4 +389,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20260331';
+const DATA_VERSION = '20260408';
