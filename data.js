@@ -591,6 +591,66 @@ const sessions = [
         highlights: [],
         problems: [],
         actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.7',
+        name: '5月专场',
+        duration: '2 小时 (19:00-21:00)',
+        views: 35,
+        luckyDraw: 27,
+        sales: 7,
+        conversion: 20,
+        validRate: 77.14,
+        closeRate: 25.92,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.9',
+        name: '5月专场',
+        duration: '2 小时 (19:00-21:00)',
+        views: 43,
+        luckyDraw: 41,
+        sales: 15,
+        conversion: 34.88,
+        validRate: 95.34,
+        closeRate: 36.58,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.10',
+        name: '5月专场',
+        duration: '2 小时 (19:00-21:00)',
+        views: 43,
+        luckyDraw: 39,
+        sales: 11,
+        conversion: 25.58,
+        validRate: 90.69,
+        closeRate: 28.2,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.13',
+        name: '5月专场',
+        duration: '2 小时 (19:00-21:00)',
+        views: 30,
+        luckyDraw: 26,
+        sales: 6,
+        conversion: 20,
+        validRate: 86.6,
+        closeRate: 23.07,
+        highlights: [],
+        problems: [],
+        actions: []
     }
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
@@ -614,4 +674,4 @@ const sessions = [
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20260504';
+const DATA_VERSION = '20260513';
