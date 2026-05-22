@@ -651,7 +651,7 @@ const sessions = [
         highlights: [],
         problems: [],
         actions: []
-    }
+    },
     // ============================================
     // 新增场次请复制以下模板，在此处添加：
     // ============================================
@@ -671,7 +671,68 @@ const sessions = [
     //     actions: ['行动项 1', '行动项 2']
     // },
     // ============================================
+    {
+        month: 5,
+        date: '2026.5.15',
+        name: '5月15日',
+        duration: '2 小时',
+        views: 32,
+        luckyDraw: 27,
+        sales: 10,
+        conversion: 31.25,
+        validRate: 84.37,
+        closeRate: 37.03,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.17',
+        name: '5月17日',
+        duration: '2 小时',
+        views: 31,
+        luckyDraw: 29,
+        sales: 10,
+        conversion: 32.25,
+        validRate: 93.54,
+        closeRate: 34.48,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.19',
+        name: '5月19日',
+        duration: '2 小时',
+        views: 34,
+        luckyDraw: 27,
+        sales: 10,
+        conversion: 29.41,
+        validRate: 79.41,
+        closeRate: 37.03,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    {
+        month: 5,
+        date: '2026.5.20',
+        name: '5月20日',
+        duration: '2 小时',
+        views: 35,
+        luckyDraw: 28,
+        sales: 11,
+        conversion: 31.42,
+        validRate: 80,
+        closeRate: 39.28,
+        highlights: [],
+        problems: [],
+        actions: []
+    },
+    // ============================================
 ];
 
 // 数据版本标识（用于缓存控制）
-const DATA_VERSION = '20260513';
+const DATA_VERSION = '20260520';
